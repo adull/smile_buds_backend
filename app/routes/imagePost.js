@@ -49,8 +49,6 @@ module.exports = function(router) {
         message: req.body.message,
         reason: req.body.reason,
         poster_id: req.session.userid,
-        grins: 0,
-        recent_grin: '',
         image: 1
       }
       fs.readFile(req.file.path, function (err, data) {

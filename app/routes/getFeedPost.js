@@ -10,7 +10,7 @@ module.exports = function(router) {
         res.status(500).send("Server error");
       }
       else {
-        // console.log(result[0])
+        console.log(result[0])
         res.json(result[0]);
       }
     })

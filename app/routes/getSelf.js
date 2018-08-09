@@ -15,7 +15,6 @@ module.exports = function(router) {
         if(results[0]) {
           res.json(results[0]);
         }
-        // console.log(results[0]);
         else {
           res.json({"signedIn": false})
         }

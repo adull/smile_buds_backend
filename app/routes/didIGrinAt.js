@@ -8,28 +8,35 @@ module.exports = function(router) {
     let userid = req.session.userid;
     let hash = req.params.hash;
 
-    if(user === undefined) {
+    if(user === undefined || userid === undefined) {
       // res.json({success: "no-user"})
+      res.json({grinned: false});
       return;
     }
-    if(hash === "undefined") {
+    if(hash === undefined || hash === "undefined") {
+      res.json({grinned: false});
       return;
     }
     else {
-
-      db.getGrins(hash, function(err, results) {
+      // console.log("hash: " + hash);
+      // console.log("userid: " + userid);
+      db.didIGrinAt(hash, userid, function(err, results) {
         if(err) {
-          console.log("yeah this");
           res.status(500).send("Server error");
         }
         else {
-          for(let i = 0; i < results.length; i ++) {
-            if(results[i].user_id === userid) {
+          // console.log(results);
+          if(results) {
+            if(results.length > 0) {
               res.json({grinned: true});
-              return;
+            }
+            else {
+              res.json({grinned: false});
             }
           }
-          res.json({grinned: false});
+          else {
+            res.json({grinned: false});
+          }
         }
       })
     }

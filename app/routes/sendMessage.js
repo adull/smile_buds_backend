@@ -1,19 +1,9 @@
 var db = require('../config/initializers/database');
 
-function makeHash() {
-  var text = "";
-  var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-  for (var i = 0; i < 10; i++)
-    text += possible.charAt(Math.floor(Math.random() * possible.length));
-
-  return text;
-}
-
 module.exports = function(router) {
-  router.route('/')
+  router.route('/:recipientId')
   .post(function(req, res, next) {
-    //copied from https://stackoverflow.com/questions/5129624/convert-js-date-time-to-mysql-datetime
+
     function twoDigits(d) {
       if(0 <= d && d < 10) return "0" + d.toString();
       if(-10 < d && d < 0) return "-0" + (-1*d).toString();
@@ -23,26 +13,32 @@ module.exports = function(router) {
     Date.prototype.toMysqlFormat = function() {
       return this.getUTCFullYear() + "-" + twoDigits(1 + this.getUTCMonth()) + "-" + twoDigits(this.getUTCDate()) + " " + twoDigits(this.getUTCHours()) + ":" + twoDigits(this.getUTCMinutes()) + ":" + twoDigits(this.getUTCSeconds());
     };
-
     let currentTime = new Date().toMysqlFormat();
-    let hashIsUnique = false;
-    let randomHash = '';
-      randomHash = makeHash();
+    let senderId = req.session.userid;
+    let recipientId = req.params.recipientId;
     let post = {
-      hash: randomHash,
-      time: currentTime,
-      subject: req.body.subject,
+      sender: senderId,
+      recipient: recipientId,
       message: req.body.message,
-      reason: req.body.reason,
-      poster_id: req.session.userid,
-      image: 0
+      time: currentTime,
+      read_receipt: 0
     }
-    db.textPost(post, function(err, results) {
+    db.sendMessage(post, function(err, result) {
       if(err) {
-        res.status(500).send("Server error");
+        res.status(500).send("Server error")
       }
       else {
-        res.json({success: true});
+        let senderId = req.session.userid;
+        let senderName = req.session.user;
+        let recipientId = req.params.recipientId;
+        db.messageNotification(recipientId, senderId, senderName, function(err, result) {
+          if(err) {
+            res.status(500).send("Server error")
+          }
+          else {
+            res.json({success: true});
+          }
+        })
       }
     })
   })

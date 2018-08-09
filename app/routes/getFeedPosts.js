@@ -11,7 +11,6 @@ module.exports = function(router) {
           res.status(500).send("Server error :~(");
         }
         else {
-          // console.log(results);
           res.json(results);
         }
       })
@@ -25,7 +24,6 @@ module.exports = function(router) {
           else {
             // let id = result[0];
             let id = result[0].id;
-            console.log("id = " + id);
             db.getPosts(id, postsReceived, function(err, results) {
               if(err) {
                 res.status(500).send("Server error :~(");
