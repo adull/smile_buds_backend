@@ -18,12 +18,35 @@ exports.signup = function(signupData, callback) {
       return;
     }
     else {
-      var connection = mysql.createConnection({multipleStatements: true});
       connection.query(postSignupSql, signupData, function(err, result) {
         connection.release();
         if(err) {
           console.log(err);
           callback(true);
+        }
+        else {
+          callback(false, result);
+        }
+      })
+    }
+  })
+}
+
+exports.doesEmailExist = function(email, callback) {
+  var getEmailSql = "SELECT * FROM user WHERE email='" + email + "';";
+  pool.getConnection(function(err, connection) {
+    if(err) {
+      console.log(err);
+      callback(true);
+      return;
+    }
+    else {
+      connection.query(getEmailSql, function(err, result) {
+        connection.release();
+        if(err) {
+          console.log(err);
+          callback(true);
+          return;
         }
         else {
           callback(false, result);
@@ -264,6 +287,28 @@ exports.sendMessage = function(post, callback) {
     }
     else {
       connection.query(sendMessageSql, post, function(err, result) {
+        connection.release();
+        if(err) {
+          console.log(err);
+          callback(true);
+        }
+        else {
+          callback(false, result);
+        }
+      })
+    }
+  })
+}
+
+exports.getMessagesBetween = function(userOne, userTwo, callback) {
+  var getMessagesBetweenSql = "SELECT * FROM messages WHERE (recipient=" + userOne + " AND sender=" + userTwo + ") OR (sender=" + userOne + " AND recipient=" + userTwo + ")";
+  pool.getConnection(function(err, connection) {
+    if(err) {
+      callback(true);
+      return;
+    }
+    else {
+      connection.query(getMessagesBetweenSql, function(err, result) {
         connection.release();
         if(err) {
           console.log(err);

@@ -11,7 +11,8 @@ var storage = multer.diskStorage({
   }
 });
 var upload = multer({ storage : storage}).single('image');
-var fs = require('file-system');
+var fs = require('fs');
+
 
 const saltRounds = 10;
 
@@ -53,25 +54,60 @@ module.exports = function(router) {
         email: req.body.email,
         password:bcrypt.hashSync(req.body.password, salt)
       };
-      fs.readFile(req.file.path, function (err, data) {
-        // let oneDirUp = __dirname.substring(0, __dirname.length - 7);
-        let newPath = __dirname + "/profile-pictures/" + identifier + ".png";
-        fs.writeFile(newPath, data, function (err) {
-          if(err){
-            console.log('ERR IN IMAGEPOST -- WRITEFILE')
-            console.log(err);
-          }
-        });
-      });
-      db.signup(signup, function(err, results) {
+      if(req.file.size > 5000000 ) {
+        res.json({reason:"file-size"});
+        return;
+      }
+      let emailExists = false;
+      db.doesEmailExist(req.body.email, function(err, results) {
         if(err) {
-          res.status(500).send("Server error :~(");
+          console.log("error in does email exist")
+          res.status(500).send("Server error :~()");
+          return;
         }
         else {
-          res.json({success: true});
+          if(results.length > 0) {
+            res.json({reason: "email-exists"});
+            return;
+          }
+          else {
+            fs.readFile(req.file.path, function (err, data) {
+              // let oneDirUp = __dirname.substring(0, __dirname.length - 7);
+              let newPath = __dirname + "/profile-pictures/" + identifier + ".png";
+              fs.writeFile(newPath, data, function (err) {
+                if(err){
+                  console.log('ERR IN IMAGEPOST -- WRITEFILE')
+                  console.log(err);
+                }
+                else {
+                  Jimp.read(newPath, (err, file) => {
+                    if (err) throw err;
+                    file
+                        .resize(300, 300) // resize
+                        .quality(60) // set JPEG quality
+                        .write(newPath); // save
+                  });
+                }
+              });
+            });
+            db.signup(signup, function(err, results) {
+              if(err) {
+                console.log("err in db signup")
+                console.log(err)
+                res.status(500).send("Server error :~(");
+                return;
+              }
+              else {
+                res.json({success: true});
+                return;
+              }
+            })
+          }
         }
       })
+      // if(emailExists === false) {
 
-      })
-    });
+      // }
+    })
+  });
 }

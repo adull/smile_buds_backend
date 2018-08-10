@@ -8,8 +8,7 @@ module.exports = function(router) {
     let userid = req.session.userid;
     let hash = req.params.hash;
 
-    if(user === undefined || userid === undefined) {
-      // res.json({success: "no-user"})
+    if(user === undefined || userid === undefined || user === '' || userid === '') {
       res.json({grinned: false});
       return;
     }
@@ -18,8 +17,6 @@ module.exports = function(router) {
       return;
     }
     else {
-      // console.log("hash: " + hash);
-      // console.log("userid: " + userid);
       db.didIGrinAt(hash, userid, function(err, results) {
         if(err) {
           res.status(500).send("Server error");

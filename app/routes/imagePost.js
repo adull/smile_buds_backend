@@ -11,7 +11,8 @@ var storage = multer.diskStorage({
 // var storage = multer();
 var upload = multer({ storage : storage}).single('image');
 // var upload = multer().single('image');
-var fs = require('file-system');
+var fs = require('fs');
+var Jimp = require('jimp')
 
 function makeHash() {
   var text = "";
@@ -57,6 +58,22 @@ module.exports = function(router) {
           if(err){
             console.log('ERR IN IMAGEPOST -- WRITEFILE')
             console.log(err);
+          }
+          else {
+            Jimp.read(newPath, (err, file) => {
+              if (err) throw err;
+              let fileWidth = file.bitmap.width;
+              let fileHeight = file.bitmap.height;
+              var shrinkAmt = 0;
+              if(fileWidth > 400) {
+                shrinkAmt = 400/fileWidth;
+                file
+                    .resize(400, fileHeight * shrinkAmt) // resize
+                    .quality(60) // set JPEG quality
+                    .write(newPath); // save
+
+              }
+            })
           }
         });
       });
