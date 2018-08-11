@@ -17,7 +17,27 @@ module.exports = function(router) {
         res.status(500).send("Server error");
       }
       else {
-        res.json({success: true});
+        db.getPost(hash, function(err, getPostResult) {
+          if(err) {
+            res.status(500).send("Server error");
+          }
+          else {
+            if(getPostResult) {
+              posterId = getPostResult[0].poster_id;
+              db.deleteLove(userid, posterId, function(err, removeLoveResult) {
+                if(err) {
+                  res.status(500).send("Server error");
+                }
+                else {
+                  res.json({success: true});
+                }
+              })
+            }
+            else {
+              res.status(500).send("Server error");
+            }
+          }
+        })
       }
     })
   })

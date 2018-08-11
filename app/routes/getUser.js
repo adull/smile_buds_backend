@@ -5,6 +5,10 @@ var session = require('express-session');
 module.exports = function(router) {
   router.route('/:selectorType/:selector')
   .get(function(req, res) {
+    let userid = 0;
+    if(req.session.userid) {
+      userid = req.session.userid;
+    }
     // console.log("okay")
     var selectorType = req.params.selectorType;
     var selector = req.params.selector;
@@ -15,7 +19,17 @@ module.exports = function(router) {
       }
       else {
         // console.log(results[0])
-        res.json(results[0]);
+        let theirId = results[0].id;
+        db.getLove(theirId, userid, function(err, loveAmt) {
+          if(err) {
+            results[0]["love_amount"] = 0;
+          }
+          else {
+            results[0]["love_amount"] = loveAmt;
+            res.json(results[0]);
+          }
+        })
+
       }
     })
   })

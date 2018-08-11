@@ -165,10 +165,10 @@ exports.getPoster = function(hash, callback) {
 exports.getPosts = function(id, postsReceived, callback) {
   var getPostsSql = "";
   if(id === "all") {
-    getPostsSql = "SELECT * FROM post ORDER BY id DESC LIMIT 10";
+    getPostsSql = "SELECT * FROM post ORDER BY id DESC LIMIT " + postsReceived + ", 10";
   }
   else {
-    getPostsSql = "SELECT * FROM post WHERE poster_id='" + id + "' ORDER BY id DESC LIMIT 10";
+    getPostsSql = "SELECT * FROM post WHERE poster_id='" + id + "' ORDER BY id DESC LIMIT " + postsReceived + ", 10";
   }
   pool.getConnection(function(err, connection) {
     if(err) {
@@ -500,4 +500,79 @@ exports.removePostNotifications = function(userID, callback) {
       })
     }
   })
+}
+
+exports.addLove = function(lover, loved, callback) {
+  // var doesXLoveYSql = "SELECT * FROM lovers WHERE lover='" + x + "' AND loved='" + y +"'";
+//   INSERT INTO mytable (ID,`key`,`value`) VALUES (1106,'_views',1)
+// ON DUPLICATE KEY UPDATE `value` = `value` + 1;
+  var addLoveSql = "INSERT into lovers (lover, loved) VALUES(" + lover + ", " + loved + ");";
+  console.log(addLoveSql);
+  pool.getConnection(function(err, connection) {
+    if(err) {
+      callback(true);
+      return;
+    }
+    else {
+      connection.query(addLoveSql, function(err, result) {
+        connection.release();
+        if(err) {
+          console.log(err);
+          callback(true);
+        }
+        else {
+          callback(false, result);
+        }
+      })
+    }
+  });
+}
+
+exports.deleteLove = function(lover, loved, callback) {
+  var removeLoveSql = "DELETE FROM lovers WHERE lover=" + lover + " AND loved=" + loved + " LIMIT 1";
+  pool.getConnection(function(err, connection) {
+    if(err) {
+      callback(true);
+      return;
+    }
+    else {
+      connection.query(removeLoveSql, function(err, result) {
+        connection.release();
+        if(err) {
+          console.log(err);
+          callback(true);
+        }
+        else {
+          callback(false, result);
+        }
+      })
+    }
+  });
+}
+
+exports.getLove = function(lover, loved, callback) {
+  var getLoveSql = "SELECT * FROM lovers WHERE lover=" + lover + " AND loved=" + loved;
+  pool.getConnection(function(err, connection) {
+    if(err) {
+      callback(true);
+      return;
+    }
+    else {
+      connection.query(getLoveSql, function(err, result) {
+        connection.release();
+        if(err) {
+          console.log(err);
+          callback(true);
+        }
+        else {
+          if(result) {
+            callback(false, result.length);
+          }
+          else {
+            callback(false, 0);
+          }
+        }
+      })
+    }
+  });
 }
