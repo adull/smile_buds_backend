@@ -211,27 +211,29 @@ exports.getGrins = function(hash, callback) {
 }
 
 exports.grinAt = function(hash, userid, userName, callback) {
-  let grinAtSql = "INSERT INTO post_grins (post_hash, user_id, user_name) VALUES('" + hash + "', " + userid + ", '" + userName + "')";
-  // console.log(grinAtSql);
-  pool.getConnection(function(err, connection) {
-    if(err) {
-      callback(true);
-      return;
-    }
-    else {
-      connection.query(grinAtSql, function(err, result) {
-        connection.release();
-        if(err) {
-          console.log(err);
-          callback(true);
-        }
-        else {
-          // console.log("yeah this is good");
-          callback(false, result);
-        }
-      })
-    }
-  })
+  if(userid) {
+    let grinAtSql = "INSERT INTO post_grins (post_hash, user_id, user_name) VALUES('" + hash + "', " + userid + ", '" + userName + "')";
+    // console.log(grinAtSql);
+    pool.getConnection(function(err, connection) {
+      if(err) {
+        callback(true);
+        return;
+      }
+      else {
+        connection.query(grinAtSql, function(err, result) {
+          connection.release();
+          if(err) {
+            console.log(err);
+            callback(true);
+          }
+          else {
+            // console.log("yeah this is good");
+            callback(false, result);
+          }
+        })
+      }
+    })
+  }
 }
 
 exports.ungrinAt = function(hash, userid, callback) {
@@ -301,25 +303,30 @@ exports.sendMessage = function(post, callback) {
 }
 
 exports.getMessagesBetween = function(userOne, userTwo, callback) {
-  var getMessagesBetweenSql = "SELECT * FROM messages WHERE (recipient=" + userOne + " AND sender=" + userTwo + ") OR (sender=" + userOne + " AND recipient=" + userTwo + ")";
-  pool.getConnection(function(err, connection) {
-    if(err) {
-      callback(true);
-      return;
-    }
-    else {
-      connection.query(getMessagesBetweenSql, function(err, result) {
-        connection.release();
-        if(err) {
-          console.log(err);
-          callback(true);
-        }
-        else {
-          callback(false, result);
-        }
-      })
-    }
-  })
+  if(userOne && userTwo) {
+    var getMessagesBetweenSql = "SELECT * FROM messages WHERE (recipient=" + userOne + " AND sender=" + userTwo + ") OR (sender=" + userOne + " AND recipient=" + userTwo + ")";
+    pool.getConnection(function(err, connection) {
+      if(err) {
+        callback(true);
+        return;
+      }
+      else {
+        connection.query(getMessagesBetweenSql, function(err, result) {
+          connection.release();
+          if(err) {
+            console.log(err);
+            callback(true);
+          }
+          else {
+            callback(false, result);
+          }
+        })
+      }
+    })
+  }
+  else {
+    callback(true);
+  }
 }
 
 exports.getAllMessages = function(userid, callback) {
@@ -347,27 +354,32 @@ exports.getAllMessages = function(userid, callback) {
 }
 
 exports.getMessages = function(userid, messaging, callback) {
-  var getMessageBuddiesSql = "SELECT * FROM messages WHERE (recipient=" + userid + " AND sender=" + messaging + ") OR (recipient=" + messaging + " AND sender=" +userid + ") ORDER BY id DESC";
-  // console.log(getMessageBuddiesSql)
-  pool.getConnection(function(err, connection) {
-    if(err) {
-      callback(true);
-      return;
-    }
-    else {
-      connection.query(getMessageBuddiesSql, function(err, result) {
-        connection.release();
-        if(err) {
-          console.log(err);
-          callback(true);
-        }
-        else {
-          // console.log(result);
-          callback(false, result);
-        }
-      })
-    }
-  })
+  if(userid && messaging) {
+    var getMessageBuddiesSql = "SELECT * FROM messages WHERE (recipient=" + userid + " AND sender=" + messaging + ") OR (recipient=" + messaging + " AND sender=" +userid + ") ORDER BY id DESC";
+    // console.log(getMessageBuddiesSql)
+    pool.getConnection(function(err, connection) {
+      if(err) {
+        callback(true);
+        return;
+      }
+      else {
+        connection.query(getMessageBuddiesSql, function(err, result) {
+          connection.release();
+          if(err) {
+            console.log(err);
+            callback(true);
+          }
+          else {
+            // console.log(result);
+            callback(false, result);
+          }
+        })
+      }
+    })
+  }
+  else {
+    callback(true);
+  }
 }
 
 exports.messageNotification = function(toID, fromID, fromName, callback) {
@@ -459,25 +471,30 @@ exports.getMessageNotifications = function(userID, callback) {
 }
 
 exports.removeMessageNotifications = function(userID, callback) {
-  var removeMessageNotificationsSql = "DELETE FROM message_notifications WHERE notification_for=" + userID;
-  pool.getConnection(function(err, connection) {
-    if(err) {
-      callback(true);
-      return;
-    }
-    else {
-      connection.query(removeMessageNotificationsSql, function(err, result) {
-        connection.release();
-        if(err) {
-          console.log(err);
-          callback(true);
-        }
-        else {
-          callback(false, result);
-        }
-      })
-    }
-  })
+  if(userID) {
+    var removeMessageNotificationsSql = "DELETE FROM message_notifications WHERE notification_for=" + userID;
+    pool.getConnection(function(err, connection) {
+      if(err) {
+        callback(true);
+        return;
+      }
+      else {
+        connection.query(removeMessageNotificationsSql, function(err, result) {
+          connection.release();
+          if(err) {
+            console.log(err);
+            callback(true);
+          }
+          else {
+            callback(false, result);
+          }
+        })
+      }
+    })
+  }
+  else {
+    callback(true);
+  }
 }
 
 exports.removePostNotifications = function(userID, callback) {

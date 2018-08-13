@@ -9,7 +9,7 @@ module.exports = function(router) {
 
     if(user === undefined || userid === undefined) {
       console.log("stop here - no user/userid");
-      res.json({success: "no-user"});
+      res.json({fail: "no-user"});
       return;
     }
     else {
