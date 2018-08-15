@@ -3,6 +3,8 @@ var db = require('../config/initializers/database');
 module.exports = function(router) {
   router.route('/:identifier/:postsReceived')
   .get(function(req, res) {
+    console.log("enters here");
+    console.log("identifier is: " + identifier);
     let identifier = req.params.identifier;
     let postsReceived = req.params.postsReceived;
     if(identifier === "all") {

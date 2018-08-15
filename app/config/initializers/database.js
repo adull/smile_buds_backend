@@ -1,14 +1,23 @@
 const mysql = require('mysql');
 
-var pool = mysql.createPool({
-  user: 'root',
-  password: 'root',
-  host: 'localhost',
-  port: '8889',
-  database: 'smile_buds'
-  // socketPath: '/Applications/MAMP/tmp/mysql/mysql.sock'
-});
-
+if(process.env.NODE_ENV === 'development') {
+  var pool = mysql.createPool({
+    user: 'root',
+    password: 'root',
+    host: 'localhost',
+    port: '8889',
+    database: 'smile_buds'
+  });
+}
+else if(process.env.NODE_ENV === 'production' {
+  var pool = mysql.createPool({
+    user: 'root',
+    password: 'root',
+    host: 'localhost',
+    port: '3306',
+    database: 'smile_buds'
+  });
+})
 //take signup form, put into db
 exports.signup = function(signupData, callback) {
   var postSignupSql = "INSERT INTO user SET ?";
