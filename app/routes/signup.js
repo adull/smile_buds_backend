@@ -45,6 +45,9 @@ module.exports = function(router) {
   router.route('/')
   .post(function(req, res, next) {
     upload(req,res,function(err){
+      console.log("req.body");
+      console.log(req.body);
+      console.log("req.file");
       console.log(req.file);
       var salt = bcrypt.genSaltSync(saltRounds);
       var identifier = makeIdentifier(req.body.first_name)
