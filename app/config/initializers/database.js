@@ -18,6 +18,8 @@ else if(process.env.NODE_ENV === 'production') {
     database: 'smile_buds'
   });
 }
+else {
+}
 //take signup form, put into db
 exports.signup = function(signupData, callback) {
   var postSignupSql = "INSERT INTO user SET ?";
