@@ -9,7 +9,7 @@ if(process.env.NODE_ENV === 'development') {
     database: 'smile_buds'
   });
 }
-else if(process.env.NODE_ENV === 'production' {
+else if(process.env.NODE_ENV === 'production') {
   var pool = mysql.createPool({
     user: 'root',
     password: 'root',
@@ -17,7 +17,7 @@ else if(process.env.NODE_ENV === 'production' {
     port: '3306',
     database: 'smile_buds'
   });
-})
+}
 //take signup form, put into db
 exports.signup = function(signupData, callback) {
   var postSignupSql = "INSERT INTO user SET ?";
