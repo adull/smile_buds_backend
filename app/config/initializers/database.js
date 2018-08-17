@@ -18,8 +18,6 @@ else if(process.env.NODE_ENV === 'production') {
     database: 'smile_buds'
   });
 }
-else {
-}
 //take signup form, put into db
 exports.signup = function(signupData, callback) {
   var postSignupSql = "INSERT INTO user SET ?";
@@ -79,7 +77,7 @@ exports.getUser = function(searchBy, value, callback) {
   if(searchBy === 'identifier') {
     var getUserSql = "SELECT * FROM user WHERE identifier='" + value + "';";
   }
-  // console.log(getUserSql)
+  console.log(pool)
   pool.getConnection(function(err, connection) {
     if(err) {
       console.log(err)
