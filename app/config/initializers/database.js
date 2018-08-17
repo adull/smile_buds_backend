@@ -1,5 +1,4 @@
 const mysql = require('mysql');
-
 if(process.env.NODE_ENV === 'development') {
   var pool = mysql.createPool({
     user: 'root',
@@ -77,7 +76,7 @@ exports.getUser = function(searchBy, value, callback) {
   if(searchBy === 'identifier') {
     var getUserSql = "SELECT * FROM user WHERE identifier='" + value + "';";
   }
-  console.log(pool)
+
   pool.getConnection(function(err, connection) {
     if(err) {
       console.log(err)
