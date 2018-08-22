@@ -475,7 +475,7 @@ exports.getMessageNotifications = function(userID, callback) {
 }
 
 exports.removeMessageNotification= function(myID, theirID, callback) {
-  var removePostNotificationSql = "DELETE FROM message_notifications WHERE notification_for=" + myID + " AND notification_from_id=" + theirID;
+  var removePostNotificationSql = "DELETE FROM message_notifications WHERE (notification_for=" + myID + " AND notification_from_id=" + theirID + ") OR (notification_for=" + theirID + " AND notification_from_id=" + myID + ")";
   pool.getConnection(function(err, connection) {
     if(err) {
       callback(true);
@@ -496,6 +496,7 @@ exports.removeMessageNotification= function(myID, theirID, callback) {
   })
 }
 
+//the difference between this and removegrinnotification is that it uses the recipient's id
 exports.removePostNotification= function(userID, hash, callback) {
   var removePostNotificationSql = "DELETE FROM post_notifications WHERE notification_for=" + userID + " AND post_hash='" + hash + "'";
   pool.getConnection(function(err, connection) {
@@ -518,10 +519,30 @@ exports.removePostNotification= function(userID, hash, callback) {
   })
 }
 
+//the difference between this and removepostnotification is that it uses the sender's id
+exports.removeGrinNotification = function(userID, hash, callback) {
+  var removePostNotificationSql = "DELETE FROM post_notifications WHERE notification_from_id=" + userID + " AND post_hash='" + hash + "'";
+  pool.getConnection(function(err, connection) {
+    if(err) {
+      callback(true);
+      return;
+    }
+    else {
+      connection.query(removePostNotificationSql, function(err, result) {
+        connection.release();
+        if(err) {
+          console.log(err);
+          callback(true);
+        }
+        else {
+          callback(false, result);
+        }
+      })
+    }
+  })
+}
+
 exports.addLove = function(lover, loved, callback) {
-  // var doesXLoveYSql = "SELECT * FROM lovers WHERE lover='" + x + "' AND loved='" + y +"'";
-//   INSERT INTO mytable (ID,`key`,`value`) VALUES (1106,'_views',1)
-// ON DUPLICATE KEY UPDATE `value` = `value` + 1;
   var addLoveSql = "INSERT into lovers (lover, loved) VALUES(" + lover + ", " + loved + ");";
   pool.getConnection(function(err, connection) {
     if(err) {

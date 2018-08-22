@@ -29,7 +29,14 @@ module.exports = function(router) {
                   res.status(500).send("Server error");
                 }
                 else {
-                  res.json({success: true});
+                  db.removeGrinNotification(userid, hash, function(err, result) {
+                    if(err) {
+                      res.status(500).send("Server error");
+                    }
+                    else {
+                      res.json({success: true});
+                    }
+                  })
                 }
               })
             }
