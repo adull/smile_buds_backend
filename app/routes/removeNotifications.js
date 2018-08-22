@@ -4,7 +4,6 @@ module.exports = function(router) {
   router.route('/')
   .get(function(req, res) {
     let userid = req.session.userid;
-    console.log(userid);
     if(userid !== undefined)  {
       db.removeMessageNotifications(userid, function(err, result) {
         if(err) {

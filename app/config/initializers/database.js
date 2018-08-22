@@ -339,7 +339,6 @@ exports.getMessagesBetween = function(userOne, userTwo, callback) {
 
 exports.getAllMessages = function(userid, callback) {
   var getMessageBuddiesSql = "SELECT * FROM messages WHERE (recipient=" + userid + " OR sender=" + userid + ") ORDER BY id DESC";
-  // console.log(getMessageBuddiesSql)
   pool.getConnection(function(err, connection) {
     if(err) {
       callback(true);
@@ -353,7 +352,6 @@ exports.getAllMessages = function(userid, callback) {
           callback(true);
         }
         else {
-          // console.log(result);
           callback(false, result);
         }
       })
@@ -364,7 +362,6 @@ exports.getAllMessages = function(userid, callback) {
 exports.getMessages = function(userid, messaging, callback) {
   if(userid && messaging) {
     var getMessageBuddiesSql = "SELECT * FROM messages WHERE (recipient=" + userid + " AND sender=" + messaging + ") OR (recipient=" + messaging + " AND sender=" +userid + ") ORDER BY id DESC";
-    // console.log(getMessageBuddiesSql)
     pool.getConnection(function(err, connection) {
       if(err) {
         callback(true);
@@ -378,7 +375,6 @@ exports.getMessages = function(userid, messaging, callback) {
             callback(true);
           }
           else {
-            // console.log(result);
             callback(false, result);
           }
         })
@@ -505,6 +501,28 @@ exports.removeMessageNotifications = function(userID, callback) {
   }
 }
 
+exports.removeMessageNotification= function(myID, theirID, callback) {
+  var removePostNotificationSql = "DELETE FROM message_notifications WHERE notification_for=" + myID + " AND notification_from_id=" + theirID;
+  pool.getConnection(function(err, connection) {
+    if(err) {
+      callback(true);
+      return;
+    }
+    else {
+      connection.query(removePostNotificationSql, function(err, result) {
+        connection.release();
+        if(err) {
+          console.log(err);
+          callback(true);
+        }
+        else {
+          callback(false, result);
+        }
+      })
+    }
+  })
+}
+
 exports.removePostNotifications = function(userID, callback) {
   var removePostNotificationsSql = "DELETE FROM post_notifications WHERE notification_for=" + userID;
   pool.getConnection(function(err, connection) {
@@ -527,12 +545,33 @@ exports.removePostNotifications = function(userID, callback) {
   })
 }
 
+exports.removePostNotification= function(userID, hash, callback) {
+  var removePostNotificationSql = "DELETE FROM post_notifications WHERE notification_for=" + userID + " AND post_hash='" + hash + "'";
+  pool.getConnection(function(err, connection) {
+    if(err) {
+      callback(true);
+      return;
+    }
+    else {
+      connection.query(removePostNotificationSql, function(err, result) {
+        connection.release();
+        if(err) {
+          console.log(err);
+          callback(true);
+        }
+        else {
+          callback(false, result);
+        }
+      })
+    }
+  })
+}
+
 exports.addLove = function(lover, loved, callback) {
   // var doesXLoveYSql = "SELECT * FROM lovers WHERE lover='" + x + "' AND loved='" + y +"'";
 //   INSERT INTO mytable (ID,`key`,`value`) VALUES (1106,'_views',1)
 // ON DUPLICATE KEY UPDATE `value` = `value` + 1;
   var addLoveSql = "INSERT into lovers (lover, loved) VALUES(" + lover + ", " + loved + ");";
-  console.log(addLoveSql);
   pool.getConnection(function(err, connection) {
     if(err) {
       callback(true);
