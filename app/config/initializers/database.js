@@ -474,33 +474,6 @@ exports.getMessageNotifications = function(userID, callback) {
   })
 }
 
-exports.removeMessageNotifications = function(userID, callback) {
-  if(userID) {
-    var removeMessageNotificationsSql = "DELETE FROM message_notifications WHERE notification_for=" + userID;
-    pool.getConnection(function(err, connection) {
-      if(err) {
-        callback(true);
-        return;
-      }
-      else {
-        connection.query(removeMessageNotificationsSql, function(err, result) {
-          connection.release();
-          if(err) {
-            console.log(err);
-            callback(true);
-          }
-          else {
-            callback(false, result);
-          }
-        })
-      }
-    })
-  }
-  else {
-    callback(true);
-  }
-}
-
 exports.removeMessageNotification= function(myID, theirID, callback) {
   var removePostNotificationSql = "DELETE FROM message_notifications WHERE notification_for=" + myID + " AND notification_from_id=" + theirID;
   pool.getConnection(function(err, connection) {
@@ -510,28 +483,6 @@ exports.removeMessageNotification= function(myID, theirID, callback) {
     }
     else {
       connection.query(removePostNotificationSql, function(err, result) {
-        connection.release();
-        if(err) {
-          console.log(err);
-          callback(true);
-        }
-        else {
-          callback(false, result);
-        }
-      })
-    }
-  })
-}
-
-exports.removePostNotifications = function(userID, callback) {
-  var removePostNotificationsSql = "DELETE FROM post_notifications WHERE notification_for=" + userID;
-  pool.getConnection(function(err, connection) {
-    if(err) {
-      callback(true);
-      return;
-    }
-    else {
-      connection.query(removePostNotificationsSql, function(err, result) {
         connection.release();
         if(err) {
           console.log(err);

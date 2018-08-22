@@ -5,8 +5,8 @@ module.exports = function(router) {
   .get(function(req, res) {
     let myID = req.session.userid;
     let theirID = req.params.theirID;
-    if(userid) {
-      db.removeMessageNotificaitons(myID, theirID, function(err, result) {
+    if(myID && theirID) {
+      db.removeMessageNotification(myID, theirID, function(err, result) {
         if(err) {
           res.status(500).send("Server error");
         }
