@@ -612,3 +612,49 @@ exports.getLove = function(lover, loved, callback) {
     }
   });
 }
+
+exports.getComments = function(hash, callback) {
+  var getCommentsSql = "SELECT * FROM comments WHERE post_hash='" + hash + "'";
+  pool.getConnection(function(err, connection) {
+    if(err) {
+      callback(true);
+      return;
+    }
+    else {
+      connection.query(getCommentsSql, function(err, results) {
+        connection.release();
+        if(err) {
+          console.log(err);
+          callback(true);
+        }
+        else {
+          if(results) {
+            callback(false, results);
+          }
+        }
+      })
+    }
+  })
+}
+
+exports.writeComment = function(comment, callback) {
+  var writeCommentSql = "INSERT INTO comments SET ?";
+  pool.getConnection(function(err, connection) {
+    if(err) {
+      callback(true);
+      return;
+    }
+    else {
+      connection.query(writeCommentSql, comment, function(err, result) {
+        connection.release();
+        if(err) {
+          console.log(err);
+          callback(true);
+        }
+        else {
+          callback(false, result);
+        }
+      })
+    }
+  })
+}

@@ -20,6 +20,7 @@ module.exports = function(router) {
             if(bcrypt.compareSync(password, savedPass)) {
               req.session.userid = results[0].id;
               req.session.user = results[0].first_name;
+              req.session.identifier = results[0].identifier;
               res.json({success: true});
             }
             else {
