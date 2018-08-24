@@ -386,6 +386,31 @@ exports.getMessages = function(userid, messaging, callback) {
   }
 }
 
+exports.commentNotifications = function(commentNotificationArr, callback) {
+  for(var i = 0; i < commentNotificationArr.length; i ++) {
+    // var commentNotificationSql = "INSERT INTO comment_notifications SET ?";
+    let c = commentNotificationArr[i]
+    var commentNotificationSql = "INSERT INTO comment_notifications (notification_type, notification_for, notification_from_id, notification_from_name, post_hash) VALUES('comment', " + c.notification_for + ", " + c.notification_from_id + ", '" + c.notification_from_name + "'," + "'" + c.post_hash + "')";
+    pool.getConnection(function(err, connection) {
+      if(err) {
+        callback(true);
+        return;
+      }
+      else {
+        connection.query(commentNotificationSql, function(err, result) {
+          connection.release();
+          if(err) {
+            console.log(err);
+            callback(true);
+          }
+        })
+      }
+    })
+  }
+  callback(false, "lol");
+
+};
+
 exports.messageNotification = function(toID, fromID, fromName, callback) {
   var messageNotificationSql = "INSERT INTO message_notifications (notification_type, notification_for, notification_from_id, notification_from_name) VALUES('message', " + toID + ", " + fromID + ", '" + fromName + "')";
   pool.getConnection(function(err, connection) {
@@ -653,6 +678,28 @@ exports.writeComment = function(comment, callback) {
         }
         else {
           callback(false, result);
+        }
+      })
+    }
+  })
+}
+
+exports.getCommenters = function(hash, callback) {
+  var users = [];
+  var getCommentersSql = "SELECT commenter_id FROM comments WHERE post_hash='" + hash + "'";
+  pool.getConnection(function(err, connection) {
+    if(err) {
+      callback(true);
+      return;
+    }
+    else {
+      connection.query(getCommentersSql, function(err, results) {
+        if(err) {
+          console.log(err);
+          callback(true);
+        }
+        else {
+          callback(false, results);
         }
       })
     }

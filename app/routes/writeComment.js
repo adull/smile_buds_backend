@@ -14,12 +14,57 @@ module.exports = function(router) {
       commenter_identifier: commenterIdentifier,
       comment: req.body.comment
     }
+    if(commenterID === undefined || commenterName === undefined || commenterIdentifier === undefined) {
+      res.json({
+        reason: "not-logged-in"
+      })
+      return;
+    }
     db.writeComment(comment, function(err, result) {
       if(err) {
         res.status(500).send("Server error")
       }
       else {
-        res.json({success: true});
+        let usersInvolved = new Set();
+        db.getPoster(hash, function(err, result) {
+          if(err) {
+            res.status(500).send("Server error")
+          }
+          else {
+            // console.log(result[0])
+            usersInvolved.add(result[0].poster_id);
+            db.getCommenters(hash, function(err, results) {
+              if(err) {
+                res.status(500).send("Server error")
+              }
+              else {
+                for(var i = 0; i < results.length; i ++) {
+                  usersInvolved.add(results[i].commenter_id)
+                }
+                let commentNotifications = [];
+                for(let notifForID of usersInvolved) {
+                  let commentNotification = {
+                    notification_type: 'comment',
+                    notification_for: notifForID,
+                    notification_from_id: commenterID,
+                    notification_from_name: commenterName,
+                    post_hash: hash
+                  }
+                  commentNotifications.push(commentNotification)
+                }
+                db.commentNotifications(commentNotifications, function(err, result) {
+                  if(err) {
+                    res.status(500).send("Server error")
+                  }
+                  else {
+                    res.json({success: true});
+                    return;
+                  }
+                })
+              }
+            })
+          }
+        })
       }
     })
   })
