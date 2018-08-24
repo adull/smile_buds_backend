@@ -198,7 +198,7 @@ exports.getPosts = function(id, postsReceived, callback) {
 }
 
 exports.getGrins = function(hash, callback) {
-  let getGrinnersSql = "SELECT user_id, user_name FROM post_grins WHERE post_hash='" + hash + "'";
+  let getGrinnersSql = "SELECT user_id, user_name, user_identifier FROM post_grins WHERE post_hash='" + hash + "'";
   pool.getConnection(function(err, connection) {
     if(err) {
       callback(true);
@@ -218,9 +218,9 @@ exports.getGrins = function(hash, callback) {
   })
 }
 
-exports.grinAt = function(hash, userid, userName, callback) {
+exports.grinAt = function(hash, userid, userName, userIdentifier, callback) {
   if(userid) {
-    let grinAtSql = "INSERT INTO post_grins (post_hash, user_id, user_name) VALUES('" + hash + "', " + userid + ", '" + userName + "')";
+    let grinAtSql = "INSERT INTO post_grins (post_hash, user_id, user_name, user_identifier) VALUES('" + hash + "', " + userid + ", '" + userName + "', '" + userIdentifier + "')";
     // console.log(grinAtSql);
     pool.getConnection(function(err, connection) {
       if(err) {

@@ -5,6 +5,7 @@ module.exports = function(router) {
   .post(function(req, res) {
     let user = req.session.user;
     let userid = req.session.userid;
+    let userIdentifier = req.session.identifier;
     let hash = req.params.hash;
 
     if(user === undefined || userid === undefined) {
@@ -13,7 +14,7 @@ module.exports = function(router) {
       return;
     }
     else {
-      db.grinAt(hash, userid, user, function(err, results) {
+      db.grinAt(hash, userid, user, userIdentifier, function(err, results) {
         if(err) {
           res.status(500).send("Server error");
         }
