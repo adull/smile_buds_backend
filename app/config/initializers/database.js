@@ -220,8 +220,7 @@ exports.getGrins = function(hash, callback) {
 
 exports.grinAt = function(hash, userid, userName, userIdentifier, callback) {
   if(userid) {
-    let grinAtSql = "INSERT INTO post_grins (post_hash, user_id, user_name, user_identifier) VALUES('" + hash + "', " + userid + ", '" + userName + "', '" + userIdentifier + "')";
-    // console.log(grinAtSql);
+    let grinAtSql = "INSERT IGNORE INTO post_grins (post_hash, user_id, user_name, user_identifier) VALUES('" + hash + "', " + userid + ", '" + userName + "', '" + userIdentifier + "')";
     pool.getConnection(function(err, connection) {
       if(err) {
         callback(true);
@@ -235,7 +234,6 @@ exports.grinAt = function(hash, userid, userName, userIdentifier, callback) {
             callback(true);
           }
           else {
-            // console.log("yeah this is good");
             callback(false, result);
           }
         })
@@ -390,69 +388,75 @@ exports.commentNotifications = function(commentNotificationArr, callback) {
   for(var i = 0; i < commentNotificationArr.length; i ++) {
     // var commentNotificationSql = "INSERT INTO comment_notifications SET ?";
     let c = commentNotificationArr[i]
-    var commentNotificationSql = "INSERT INTO comment_notifications (notification_type, notification_for, notification_from_id, notification_from_name, post_hash) VALUES('comment', " + c.notification_for + ", " + c.notification_from_id + ", '" + c.notification_from_name + "'," + "'" + c.post_hash + "')";
-    pool.getConnection(function(err, connection) {
-      if(err) {
-        callback(true);
-        return;
-      }
-      else {
-        connection.query(commentNotificationSql, function(err, result) {
-          connection.release();
-          if(err) {
-            console.log(err);
-            callback(true);
-          }
-        })
-      }
-    })
+    if(c.notification_for !== c.notification_from_id) {
+      var commentNotificationSql = "INSERT INTO comment_notifications (notification_type, notification_for, notification_from_id, notification_from_name, post_hash) VALUES('comment', " + c.notification_for + ", " + c.notification_from_id + ", '" + c.notification_from_name + "'," + "'" + c.post_hash + "')";
+      pool.getConnection(function(err, connection) {
+        if(err) {
+          callback(true);
+          return;
+        }
+        else {
+          connection.query(commentNotificationSql, function(err, result) {
+            connection.release();
+            if(err) {
+              console.log(err);
+              callback(true);
+            }
+          })
+        }
+      })
+    }
   }
   callback(false, "lol");
 
 };
 
 exports.messageNotification = function(toID, fromID, fromName, callback) {
-  var messageNotificationSql = "INSERT INTO message_notifications (notification_type, notification_for, notification_from_id, notification_from_name) VALUES('message', " + toID + ", " + fromID + ", '" + fromName + "')";
-  pool.getConnection(function(err, connection) {
-    if(err) {
-      callback(true);
-      return;
-    }
-    else {
-      connection.query(messageNotificationSql, function(err, result) {
-        connection.release();
-        if(err) {
-          console.log(err);
-          callback(true);
-        }
-        else {
-          callback(false, result);
-        }
-      })
-    }
-  })
+  if(toID !== fromID) {
+    var messageNotificationSql = "INSERT INTO message_notifications (notification_type, notification_for, notification_from_id, notification_from_name) VALUES('message', " + toID + ", " + fromID + ", '" + fromName + "')";
+    pool.getConnection(function(err, connection) {
+      if(err) {
+        callback(true);
+        return;
+      }
+      else {
+        connection.query(messageNotificationSql, function(err, result) {
+          connection.release();
+          if(err) {
+            console.log(err);
+            callback(true);
+          }
+          else {
+            callback(false, result);
+          }
+        })
+      }
+    })
+  }
 }
 
 exports.postNotification = function(toID, fromID, fromName, postHash, callback) {
-  var postNotificationSql = "INSERT INTO post_notifications (notification_type, notification_for, notification_from_id, notification_from_name, post_hash) VALUES('post', " + toID + ", " + fromID + ", '" + fromName + "', '" + postHash + "')";
-  pool.getConnection(function(err, connection) {
-    if(err) {
-      callback(true);
-      return;
-    }
-    else {
-      connection.query(postNotificationSql, function(err, result) {
-        connection.release();
-        if(err) {
-          console.log(err);
-          callback(true);
-        }
-        else {
-          callback(false, result);
-        }
-      })
-    }
-  })
+  if(toID !== fromID) {
+    var postNotificationSql = "INSERT INTO post_notifications (notification_type, notification_for, notification_from_id, notification_from_name, post_hash) VALUES('post', " + toID + ", " + fromID + ", '" + fromName + "', '" + postHash + "')";
+    pool.getConnection(function(err, connection) {
+      if(err) {
+        callback(true);
+        return;
+      }
+      else {
+        connection.query(postNotificationSql, function(err, result) {
+          connection.release();
+          if(err) {
+            console.log(err);
+            callback(true);
+          }
+          else {
+            callback(false, result);
+          }
+        })
+      }
+    })
+  }
 }
 
 exports.getPostNotifications = function(userID, callback) {
@@ -499,15 +503,37 @@ exports.getMessageNotifications = function(userID, callback) {
   })
 }
 
-exports.removeMessageNotification= function(myID, theirID, callback) {
-  var removePostNotificationSql = "DELETE FROM message_notifications WHERE (notification_for=" + myID + " AND notification_from_id=" + theirID + ") OR (notification_for=" + theirID + " AND notification_from_id=" + myID + ")";
+exports.getCommentNotifications = function(userID, callback) {
+  var getPostNotificationsSql = "SELECT * FROM comment_notifications WHERE notification_for=" + userID;
   pool.getConnection(function(err, connection) {
     if(err) {
       callback(true);
       return;
     }
     else {
-      connection.query(removePostNotificationSql, function(err, result) {
+      connection.query(getPostNotificationsSql, function(err, result) {
+        connection.release();
+        if(err) {
+          console.log(err);
+          callback(true);
+        }
+        else {
+          callback(false, result);
+        }
+      })
+    }
+  })
+}
+
+exports.removeMessageNotification= function(myID, theirID, callback) {
+  var removeMessageNotificationSql = "DELETE FROM message_notifications WHERE (notification_for=" + myID + " AND notification_from_id=" + theirID + ") OR (notification_for=" + theirID + " AND notification_from_id=" + myID + ")";
+  pool.getConnection(function(err, connection) {
+    if(err) {
+      callback(true);
+      return;
+    }
+    else {
+      connection.query(removeMessageNotificationSql, function(err, result) {
         connection.release();
         if(err) {
           console.log(err);
@@ -543,6 +569,30 @@ exports.removePostNotification= function(userID, hash, callback) {
     }
   })
 }
+
+exports.removeCommentNotification= function(userID, hash, callback) {
+  var removePostNotificationSql = "DELETE FROM comment_notifications WHERE notification_for=" + userID + " AND post_hash='" + hash + "'";
+  pool.getConnection(function(err, connection) {
+    if(err) {
+      callback(true);
+      return;
+    }
+    else {
+      connection.query(removePostNotificationSql, function(err, result) {
+        connection.release();
+        if(err) {
+          console.log(err);
+          callback(true);
+        }
+        else {
+          callback(false, result);
+        }
+      })
+    }
+  })
+}
+
+
 
 //the difference between this and removepostnotification is that it uses the sender's id
 exports.removeGrinNotification = function(userID, hash, callback) {
@@ -694,6 +744,7 @@ exports.getCommenters = function(hash, callback) {
     }
     else {
       connection.query(getCommentersSql, function(err, results) {
+        connection.release();
         if(err) {
           console.log(err);
           callback(true);

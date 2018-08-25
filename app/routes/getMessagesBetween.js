@@ -35,8 +35,6 @@ module.exports = function(router) {
               continue;
             }
             else {
-              // console.log("results[i]")
-              // console.log(results[i])
               uniqueMessageBuddies.push(otherPerson);
               results[i]["me"] = userid;
               results[i]["them"] = otherPerson;

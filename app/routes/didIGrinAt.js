@@ -22,7 +22,6 @@ module.exports = function(router) {
           res.status(500).send("Server error");
         }
         else {
-          // console.log(results);
           if(results) {
             if(results.length > 0) {
               res.json({grinned: true});

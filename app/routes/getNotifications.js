@@ -7,7 +7,6 @@ module.exports = function(router) {
     let userid = req.session.userid;
 
     if(user === undefined || userid === undefined) {
-      console.log("stop here - no user/userid");
       res.json({success: "no-user"});
       return;
     }
@@ -23,8 +22,17 @@ module.exports = function(router) {
               res.status(500).send("Server error");
             }
             else {
-              let allNotifications = postNotifications.concat(messageNotifications);
-              res.json(allNotifications);
+              let postMessageNotifications = postNotifications.concat(messageNotifications);
+              // res.json(allNotifications);
+              db.getCommentNotifications(userid, function(err, commentNotifications) {
+                if(err) {
+                  res.status(500).send("Server error");
+                }
+                else {
+                  let commentPostMessageNotifications = postMessageNotifications.concat(commentNotifications);
+                  res.json(commentPostMessageNotifications);
+                }
+              })
             }
           })
         }

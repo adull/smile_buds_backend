@@ -3,7 +3,6 @@ var bcrypt = require('bcrypt');
 let multer = require('multer');
 var storage = multer.diskStorage({
   destination: function (req, file, callback) {
-    // console.log(req.body)
     callback(null, '../uploads');
   },
   filename: function (req, file, callback) {
@@ -45,8 +44,6 @@ module.exports = function(router) {
   router.route('/')
   .post(function(req, res, next) {
     upload(req,res,function(err){
-      console.log("req file:");
-      console.log(req.file);
       var salt = bcrypt.genSaltSync(saltRounds);
       var identifier = makeIdentifier(req.body.first_name)
       var signup = {

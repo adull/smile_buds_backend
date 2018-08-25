@@ -9,7 +9,6 @@ module.exports = function(router) {
     let hash = req.params.hash;
 
     if(user === undefined || userid === undefined) {
-      console.log("stop here - no user/userid");
       res.json({fail: "no-user"});
       return;
     }
@@ -28,7 +27,6 @@ module.exports = function(router) {
             }
             else {
               if(result[0].poster_id) {
-                // console.log(result[0].poster_id);
                 db.postNotification(result[0].poster_id, userid, user, hash, function(err, postResult) {
                   if(err) {
                     res.status(500).send("Server error");
@@ -47,9 +45,6 @@ module.exports = function(router) {
                     }
                   }
                 })
-              }
-              else {
-                console.log("line 41 grin at lol")
               }
             }
           })

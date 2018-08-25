@@ -5,7 +5,6 @@ var session = require('express-session');
 module.exports = function(router) {
   router.route('/')
   .post(function(req, res, next) {
-    // console.log(req.body);
     let email = req.body.email;
     let password = req.body.password;
     if(email && password) {
@@ -24,7 +23,6 @@ module.exports = function(router) {
               res.json({success: true});
             }
             else {
-              // console.log("false");
               res.json({success: false});
             }
           }
