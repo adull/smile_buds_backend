@@ -14,11 +14,6 @@ var upload = multer({ storage : storage}).single('image');
 var fs = require('fs');
 var Jimp = require('jimp')
 
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-
 function makeHash() {
   var text = "";
   var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -57,6 +52,10 @@ module.exports = function(router) {
         poster_id: req.session.userid,
         image: 1
       }
+      if(req.file.size > 5000000 ) {
+        res.json({reason:"file-size"});
+        return;
+      }
       fs.readFile(req.file.path, function (err, data) {
         let newPath = __dirname + "/uploads/" + randomHash + ".png";
         fs.writeFile(newPath, data, function (err) {
@@ -88,9 +87,6 @@ module.exports = function(router) {
           res.status(500).send("Server error");
         }
         else {
-          console.log("before sleep")
-          sleep(5000)
-          console.log("after sleep")
           res.json({success: true});
         }
       })
