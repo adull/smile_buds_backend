@@ -9,7 +9,12 @@ module.exports = function(router) {
         res.status(500).send("Server error");
       }
       else {
-        res.json(result[0]);
+        if(result[0]) {
+          res.json(result[0]);
+        }
+        else {
+          res.json({reason: "no-post"})
+        }
       }
     })
   })
