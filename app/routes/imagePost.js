@@ -53,7 +53,7 @@ module.exports = function(router) {
         image: 1
       }
       if(req.file.size > 5000000 ) {
-        res.json({reason:"file-size"});
+        res.json({error_reason:"file-size"});
         return;
       }
       fs.readFile(req.file.path, function (err, data) {
@@ -87,7 +87,10 @@ module.exports = function(router) {
           res.status(500).send("Server error");
         }
         else {
-          res.json({success: true});
+          res.json({
+            success: true,
+            hash: post.hash
+          });
         }
       })
     });

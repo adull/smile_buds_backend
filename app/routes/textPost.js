@@ -42,7 +42,10 @@ module.exports = function(router) {
         res.status(500).send("Server error");
       }
       else {
-        res.json({success: true});
+        res.json({
+          success: true,
+          hash: post.hash
+        });
       }
     })
   })
