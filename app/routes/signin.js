@@ -8,7 +8,7 @@ module.exports = function(router) {
     let email = req.body.email;
     let password = req.body.password;
     if(email && password) {
-      db.getUser('email', email, function(err, results) {
+      db.getUserWithEmail(email, function(err, results) {
         if(err) {
           console.log(err);
           res.status(500).send("Server error");

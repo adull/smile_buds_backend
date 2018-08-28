@@ -14,6 +14,11 @@ var upload = multer({ storage : storage}).single('image');
 var fs = require('fs');
 var Jimp = require('jimp')
 
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+
 function makeHash() {
   var text = "";
   var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -83,6 +88,9 @@ module.exports = function(router) {
           res.status(500).send("Server error");
         }
         else {
+          console.log("before sleep")
+          sleep(5000)
+          console.log("after sleep")
           res.json({success: true});
         }
       })

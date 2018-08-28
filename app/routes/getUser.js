@@ -9,7 +9,6 @@ module.exports = function(router) {
     if(req.session.userid) {
       userid = req.session.userid;
     }
-    // console.log("okay")
     var selectorType = req.params.selectorType;
     var selector = req.params.selector;
     // db.getUser('userid', userid, function(err, results) {
@@ -18,7 +17,6 @@ module.exports = function(router) {
         res.status(500).send("Server error");
       }
       else {
-        // console.log(results[0])
         let theirId = results[0].id;
         db.getLove(theirId, userid, function(err, loveAmt) {
           if(err) {

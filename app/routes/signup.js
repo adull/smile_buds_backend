@@ -51,7 +51,7 @@ module.exports = function(router) {
         first_name: req.body.first_name,
         last_name: req.body.last_name,
         hobby: req.body.hobby,
-        lovers: '{}',
+        type: 'user',
         email: req.body.email,
         password:bcrypt.hashSync(req.body.password, salt)
       };

@@ -24,6 +24,12 @@ module.exports = function(app) {
     var router = express.Router();
     require('./' + routeName)(router);
 
-    app.use('/' + changeCase(routeName), router);
+    if(process.env.NODE_ENV === 'development') {
+      app.use('/api/' + changeCase(routeName), router);
+    }
+    else if(process.env.NODE_ENV === 'production') {
+      app.use('/' + changeCase(routeName), router);
+    }
+
   });
 }

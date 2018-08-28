@@ -66,16 +66,39 @@ exports.doesEmailExist = function(email, callback) {
 
 //retrieve user row based on input
 exports.getUser = function(searchBy, value, callback) {
+  // console.log("searchBy:" + searchBy)
+  // console.log("value:" + value)
   // console.log("inside get user in db")
-  if(searchBy === 'email') {
-    var getUserSql = "SELECT * FROM user WHERE email='" + value + "';";
-  }
   if(searchBy === 'userid') {
-    var getUserSql = "SELECT * FROM user WHERE id='" + value + "';";
+    var getUserSql = "SELECT id, identifier, first_name, hobby, type FROM user WHERE id='" + value + "';";
   }
   if(searchBy === 'identifier') {
-    var getUserSql = "SELECT * FROM user WHERE identifier='" + value + "';";
+    var getUserSql = "SELECT id, identifier, first_name, hobby, type FROM user WHERE identifier='" + value + "';";
   }
+
+  pool.getConnection(function(err, connection) {
+    if(err) {
+      console.log(err)
+      callback(true);
+      return;
+    }
+    else {
+      connection.query(getUserSql, function(err, userResult) {
+        connection.release();
+        if(err) {
+          console.log(err);
+          callback(true);
+          return;
+        }
+        // console.log("USER RESULT:"  + userResult)
+        callback(false, userResult);
+      })
+    }
+  })
+}
+
+exports.getUserWithEmail = function(value, callback) {
+  var getUserSql = "SELECT * FROM user WHERE email='" + value + "';";
 
   pool.getConnection(function(err, connection) {
     if(err) {
@@ -122,12 +145,13 @@ exports.textPost = function(textPostData, callback) {
 
 exports.getPost = function(hash, callback) {
   var getPostSql = "SELECT * FROM post WHERE hash='" + hash + "'";
-  pool.getConnection(function(err, connection) {
-    if(err) {
-      callback(true);
-      return;
-    }
-    pool.getConnection(function(err, results) {
+  // pool.getConnection(function(err, connection) {
+  //   if(err) {
+  //     callback(true);
+  //     return;
+  //   }
+    // pool.getConnection(function(err, results) {
+    pool.getConnection(function(err, connection) {
       if(err) {
         callback(true);
         return;
@@ -145,7 +169,7 @@ exports.getPost = function(hash, callback) {
         })
       }
     })
-  })
+  // })
 }
 
 exports.getPoster = function(hash, callback) {
@@ -190,6 +214,7 @@ exports.getPosts = function(id, postsReceived, callback) {
           callback(true);
         }
         else {
+          // console.log(result);
           callback(false, result);
         }
       })
@@ -751,6 +776,29 @@ exports.getCommenters = function(hash, callback) {
         }
         else {
           callback(false, results);
+        }
+      })
+    }
+  })
+}
+
+
+exports.deletePost = function(hash, callback) {
+  var deletePostSql = "DELETE FROM post WHERE hash = '" + hash + "';";
+  pool.getConnection(function(err, connection) {
+    if(err) {
+      callback(true);
+      return;
+    }
+    else {
+      connection.query(deletePostSql, function(err, result) {
+        connection.release();
+        if(err) {
+          console.log(err);
+          callback(true);
+        }
+        else {
+          callback(false, result);
         }
       })
     }
