@@ -17,6 +17,15 @@ var Jimp = require('jimp');
 
 const saltRounds = 10;
 
+function toTitleCase(str) {
+    return str.replace(
+        /\w\S*/g,
+        function(txt) {
+            return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+        }
+    );
+}
+
 function makeIdentifier(firstName) {
   let firstNameLower = firstName.toLowerCase();
   let niceWords = ['adaptable', 'adventurous', 'affectionate', 'ambitious',
@@ -48,7 +57,7 @@ module.exports = function(router) {
       var identifier = makeIdentifier(req.body.first_name)
       var signup = {
         identifier: identifier,
-        first_name: req.body.first_name.toTitleCase(),
+        first_name: toTitleCase(req.body.first_name),
         last_name: req.body.last_name,
         hobby: req.body.hobby,
         type: 'user',
