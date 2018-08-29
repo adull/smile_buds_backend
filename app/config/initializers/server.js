@@ -1,6 +1,8 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
+const session = require('express-session');
+const MySQLStore = require('express-mysql-session')(session);
 
 const port = 9001;
 
@@ -10,6 +12,39 @@ var start = function(cb) {
   const app = express();
 
   app.set('trust proxy', 1);
+
+  if(process.env.NODE_ENV === 'development') {
+    var mysqlOptions = {
+      user: 'root',
+      password: 'root',
+      host: 'localhost',
+      port: '8889',
+      database: 'smile_buds',
+      createDatabaseTable: true,
+      connectionLimit: 10000
+    };
+  }
+  else if(process.env.NODE_ENV === 'production') {
+    var mysqlOptions = {
+      user: 'root',
+      password: 'root',
+      host: 'localhost',
+      port: '3306',
+      database: 'smile_buds',
+      createDatabaseTable: true,
+      connectionLimit: 10000
+    };
+  }
+
+  var sessionStore = new MySQLStore(mysqlOptions);
+  app.use(session({
+    key: 'session_cookie_name',
+    secret: 'session_cookie_secret',
+    store: sessionStore,
+    resave: false,
+    saveUninitialized: false
+}));
+
 
   app.use(bodyParser.urlencoded({extended: true}));
   // app.use(bodyParser.json({type: '*/*'}));

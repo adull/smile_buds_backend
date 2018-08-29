@@ -243,6 +243,28 @@ exports.getGrins = function(hash, callback) {
   })
 }
 
+exports.doesGrinExist = function(hash, userid, callback) {
+  let doesGrinExistSql = "SELECT * FROM post_grins WHERE post_hash='" + hash + "' AND user_id=" + userid;
+  pool.getConnection(function(err, connection) {
+    if(err) {
+      callback(true);
+      return;
+    }
+    else {
+      connection.query(doesGrinExistSql, function(err, result) {
+        connection.release();
+        if(err) {
+          console.log(err);
+          callback(true);
+        }
+        else {
+          callback(false, result);
+        }
+      })
+    }
+  })
+}
+
 exports.grinAt = function(hash, userid, userName, userIdentifier, callback) {
   if(userid) {
     let grinAtSql = "INSERT IGNORE INTO post_grins (post_hash, user_id, user_name, user_identifier) VALUES('" + hash + "', " + userid + ", '" + userName + "', '" + userIdentifier + "')";
@@ -472,7 +494,6 @@ exports.postNotification = function(toID, fromID, fromName, postHash, callback) 
         connection.query(postNotificationSql, function(err, result) {
           connection.release();
           if(err) {
-            console.log(err);
             callback(true);
           }
           else {
@@ -481,6 +502,9 @@ exports.postNotification = function(toID, fromID, fromName, postHash, callback) 
         })
       }
     })
+  }
+  else {
+    callback(false, "haha")
   }
 }
 

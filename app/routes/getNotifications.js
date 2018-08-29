@@ -6,11 +6,12 @@ module.exports = function(router) {
     let user = req.session.user;
     let userid = req.session.userid;
 
-    if(user === undefined || userid === undefined) {
+    if(user === undefined || userid === undefined || userid === '') {
       res.json({success: "no-user"});
       return;
     }
     else {
+      console.log(userid);
       db.getPostNotifications(userid, function(err, postNotifications) {
         if(err) {
           res.status(500).send("Server error");

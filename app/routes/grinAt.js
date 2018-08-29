@@ -13,41 +13,59 @@ module.exports = function(router) {
       return;
     }
     else {
-      db.grinAt(hash, userid, user, userIdentifier, function(err, results) {
-        if(err) {
-          res.status(500).send("Server error");
-        }
-        else {
-          let user = req.session.user;
-          let userid = req.session.userid;
-          let hash = req.params.hash;
-          db.getPoster(hash, function(err, result) {
+      db.doesGrinExist(hash, userid, function(err, doesGrinExistResult) {
+        if(doesGrinExistResult.length === 0) {
+          db.grinAt(hash, userid, user, userIdentifier, function(err, results) {
             if(err) {
               res.status(500).send("Server error");
             }
             else {
-              if(result[0].poster_id) {
-                db.postNotification(result[0].poster_id, userid, user, hash, function(err, postResult) {
-                  if(err) {
-                    res.status(500).send("Server error");
+              let user = req.session.user;
+              let userid = req.session.userid;
+              let hash = req.params.hash;
+              db.getPoster(hash, function(err, result) {
+                if(err) {
+                  res.status(500).send("Server error");
+                }
+                else {
+                  if(result[0].poster_id) {
+                    console.log("yup it exists")
+                    db.postNotification(result[0].poster_id, userid, user, hash, function(err, postResult) {
+                      if(err) {
+                        res.status(500).send("Server error");
+                      }
+                      else {
+                        var posterId = result[0].poster_id;
+                        if(posterId) {
+                          db.addLove(userid, posterId, function(err, result) {
+                            if(err) {
+                              res.status(500).send("Server error");
+                            }
+                            else {
+                              res.json({success: true});
+                            }
+                          })
+                        }
+                      }
+                    })
                   }
                   else {
-                    var posterId = result[0].poster_id;
-                    if(posterId) {
-                      db.addLove(userid, posterId, function(err, result) {
-                        if(err) {
-                          res.status(500).send("Server error");
-                        }
-                        else {
-                          res.json({success: true});
-                        }
-                      })
-                    }
+                    db.addLove(userid, posterId, function(err, result) {
+                      if(err) {
+                        res.status(500).send("Server error");
+                      }
+                      else {
+                        res.json({success: true});
+                      }
+                    })
                   }
-                })
-              }
+                }
+              })
             }
           })
+        }
+        else {
+          res.end();
         }
       })
     }
