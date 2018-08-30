@@ -29,7 +29,6 @@ module.exports = function(router) {
                 }
                 else {
                   if(result[0].poster_id) {
-                    console.log("yup it exists")
                     db.postNotification(result[0].poster_id, userid, user, hash, function(err, postResult) {
                       if(err) {
                         res.status(500).send("Server error");

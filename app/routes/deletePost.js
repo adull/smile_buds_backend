@@ -19,23 +19,31 @@ module.exports = function(router) {
           }
           else {
             res.json({success: true});
+            return;
           }
         });
       }
       else {
         db.getPost(hash, function(err, getPostResult) {
-          if(getPostResult[0].poster_id === userid) {
-            if(err) {
-              res.status(500).send("Server error");
+          if(err) {
+            res.status(500).send("Server error");
+          }
+          else {
+            if(getPostResult[0].poster_id === userid) {
+
+              db.deletePost(hash, function(err, deletePostResult) {
+                if(err) {
+                  res.status(500).send("Server error");
+                }
+                else {
+                  res.json({success: true});
+                  return;
+                }
+              });
             }
-            db.deletePost(hash, function(err, deletePostResult) {
-              if(err) {
-                res.status(500).send("Server error");
-              }
-              else {
-                res.json({success: true});
-              }
-            });
+            else {
+              res.json({error_reason: 'no-privilege'});
+            }  
           }
         })
       }

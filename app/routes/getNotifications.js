@@ -11,7 +11,6 @@ module.exports = function(router) {
       return;
     }
     else {
-      console.log(userid);
       db.getPostNotifications(userid, function(err, postNotifications) {
         if(err) {
           res.status(500).send("Server error");

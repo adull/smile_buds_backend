@@ -21,7 +21,7 @@ function toTitleCase(str) {
     return str.replace(
         /\w\S*/g,
         function(txt) {
-            return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+            return txt.charAt(0).toUpperCase() + txt.substr(1);
         }
     );
 }
@@ -55,6 +55,10 @@ module.exports = function(router) {
     upload(req,res,function(err){
       var salt = bcrypt.genSaltSync(saltRounds);
       var identifier = makeIdentifier(req.body.first_name)
+      let emailNotifications = 0;
+      if(req.body.email_notifications === 'true') {
+        emailNotifications = 1;
+      }
       var signup = {
         identifier: identifier,
         first_name: toTitleCase(req.body.first_name),
@@ -62,6 +66,7 @@ module.exports = function(router) {
         hobby: req.body.hobby,
         type: 'user',
         email: req.body.email,
+        email_notifications: emailNotifications,
         password:bcrypt.hashSync(req.body.password, salt)
       };
       if(req.file.size > 5000000 ) {

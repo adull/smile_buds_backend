@@ -145,31 +145,24 @@ exports.textPost = function(textPostData, callback) {
 
 exports.getPost = function(hash, callback) {
   var getPostSql = "SELECT * FROM post WHERE hash='" + hash + "'";
-  // pool.getConnection(function(err, connection) {
-  //   if(err) {
-  //     callback(true);
-  //     return;
-  //   }
-    // pool.getConnection(function(err, results) {
-    pool.getConnection(function(err, connection) {
-      if(err) {
-        callback(true);
-        return;
-      }
-      else {
-        connection.query(getPostSql, function(err, result) {
-          connection.release();
-          if(err) {
-            console.log(err);
-            callback(true);
-          }
-          else {
-            callback(false, result);
-          }
-        })
-      }
-    })
-  // })
+  pool.getConnection(function(err, connection) {
+    if(err) {
+      callback(true);
+      return;
+    }
+    else {
+      connection.query(getPostSql, function(err, result) {
+        connection.release();
+        if(err) {
+          console.log(err);
+          callback(true);
+        }
+        else {
+          callback(false, result);
+        }
+      })
+    }
+  })
 }
 
 exports.getPoster = function(hash, callback) {
@@ -531,14 +524,14 @@ exports.getPostNotifications = function(userID, callback) {
 }
 
 exports.getMessageNotifications = function(userID, callback) {
-  var getPostNotificationsSql = "SELECT * FROM message_notifications WHERE notification_for=" + userID;
+  var getMessageNotificationsSql = "SELECT * FROM message_notifications WHERE notification_for=" + userID;
   pool.getConnection(function(err, connection) {
     if(err) {
       callback(true);
       return;
     }
     else {
-      connection.query(getPostNotificationsSql, function(err, result) {
+      connection.query(getMessageNotificationsSql, function(err, result) {
         connection.release();
         if(err) {
           console.log(err);
@@ -553,14 +546,14 @@ exports.getMessageNotifications = function(userID, callback) {
 }
 
 exports.getCommentNotifications = function(userID, callback) {
-  var getPostNotificationsSql = "SELECT * FROM comment_notifications WHERE notification_for=" + userID;
+  var getCommentNotificationsSql = "SELECT * FROM comment_notifications WHERE notification_for=" + userID;
   pool.getConnection(function(err, connection) {
     if(err) {
       callback(true);
       return;
     }
     else {
-      connection.query(getPostNotificationsSql, function(err, result) {
+      connection.query(getCommentNotificationsSql, function(err, result) {
         connection.release();
         if(err) {
           console.log(err);
@@ -777,6 +770,52 @@ exports.writeComment = function(comment, callback) {
         }
         else {
           callback(false, result);
+        }
+      })
+    }
+  })
+}
+
+exports.getComment = function(commentID, callback) {
+  console.log(commentID);
+  var getCommentSql = "SELECT * FROM comments WHERE id=" + commentID
+  pool.getConnection(function(err, connection) {
+    if(err) {
+      callback(true);
+      return;
+    }
+    else {
+      connection.query(getCommentSql, function(err, result) {
+        connection.release();
+        if(err) {
+          console.log(err);
+          callback(true);
+        }
+        else {
+          callback(false, result);
+        }
+      })
+    }
+  })
+}
+
+exports.deleteComment = function(commentID, callback) {
+  console.log(commentID);
+  var deleteCommentSql = "DELETE FROM comments WHERE id=" + commentID;
+  pool.getConnection(function(err, connection) {
+    if(err) {
+      callback(true);
+      return;
+    }
+    else {
+      connection.query(deleteCommentSql, function(err, results) {
+        connection.release();
+        if(err) {
+          console.log(err);
+          callback(true);
+        }
+        else {
+          callback(false, results);
         }
       })
     }
