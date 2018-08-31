@@ -17,6 +17,13 @@ module.exports = function(router) {
         res.status(500).send("Server error");
       }
       else {
+
+        if(results[0].id === userid) {
+          results[0].isMe = true;
+        }
+        else {
+          results[0].isMe = false;
+        }
         let theirId = results[0].id;
         db.getLove(theirId, userid, function(err, loveAmt) {
           if(err) {

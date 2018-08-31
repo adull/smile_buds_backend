@@ -20,18 +20,22 @@ module.exports = function(router) {
       db.didIGrinAt(hash, userid, function(err, results) {
         if(err) {
           res.status(500).send("Server error");
+          return;
         }
         else {
           if(results) {
             if(results.length > 0) {
               res.json({grinned: true});
+              return;
             }
             else {
               res.json({grinned: false});
+              return;
             }
           }
           else {
             res.json({grinned: false});
+            return;
           }
         }
       })
