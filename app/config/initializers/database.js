@@ -40,6 +40,78 @@ exports.signup = function(signupData, callback) {
   })
 }
 
+exports.editProfileHobby = function(hobby, identifier, callback) {
+  hobbySql = "UPDATE user SET hobby='" + hobby +"' WHERE identifier='" + identifier + "'"
+  pool.getConnection(function(err, connection) {
+    if(err) {
+      console.log(err);
+      callback(true);
+      return;
+    }
+    else {
+      connection.query(hobbySql, function(err, result) {
+        connection.release();
+        if(err) {
+          console.log(err);
+          callback(true);
+          return;
+        }
+        else {
+          callback(false, result);
+        }
+      })
+    }
+  })
+}
+
+exports.editProfilePassword = function(password, identifier, callback) {
+  passwordSql = "UPDATE user SET password='" + password +"' WHERE identifier='" + identifier + "'"
+  pool.getConnection(function(err, connection) {
+    if(err) {
+      console.log(err);
+      callback(true);
+      return;
+    }
+    else {
+      connection.query(passwordSql, function(err, result) {
+        connection.release();
+        if(err) {
+          console.log(err);
+          callback(true);
+          return;
+        }
+        else {
+          callback(false, result);
+        }
+      })
+    }
+  })
+}
+
+exports.editProfileEmailNotifications = function(emailNotifications, identifier, callback) {
+  emailNotifSql = "UPDATE user SET email_notifications='" + emailNotifications +"' WHERE identifier='" + identifier + "'"
+  pool.getConnection(function(err, connection) {
+    if(err) {
+      console.log(err);
+      callback(true);
+      return;
+    }
+    else {
+      connection.query(emailNotifSql, function(err, result) {
+        connection.release();
+        if(err) {
+          console.log(err);
+          callback(true);
+          return;
+        }
+        else {
+          callback(false, result);
+        }
+      })
+    }
+  })
+}
+
 exports.doesEmailExist = function(email, callback) {
   var getEmailSql = "SELECT * FROM user WHERE email='" + email + "';";
   pool.getConnection(function(err, connection) {
