@@ -26,6 +26,14 @@ function toTitleCase(str) {
     );
 }
 
+if(typeof(String.prototype.trim) === "undefined")
+{
+    String.prototype.trim = function()
+    {
+        return String(this).replace(/^\s+|\s+$/g, '');
+    };
+}
+
 function makeIdentifier(firstName) {
   let firstNameLower = firstName.toLowerCase();
   let niceWords = ['adaptable', 'adventurous', 'affectionate', 'ambitious',
@@ -54,21 +62,32 @@ module.exports = function(router) {
   .post(function(req, res, next) {
     upload(req,res,function(err){
       var salt = bcrypt.genSaltSync(saltRounds);
-      var identifier = makeIdentifier(req.body.first_name)
+      var identifier = makeIdentifier(req.body.first_name.trim())
       let emailNotifications = 0;
       if(req.body.email_notifications === 'true') {
         emailNotifications = 1;
       }
       var signup = {
         identifier: identifier,
-        first_name: toTitleCase(req.body.first_name),
-        last_name: req.body.last_name,
+        first_name: toTitleCase(req.body.first_name.trim()),
+        last_name: req.body.last_name.trim(),
         hobby: req.body.hobby,
         type: 'user',
-        email: req.body.email,
+        email: req.body.email.trim(),
         email_notifications: emailNotifications,
         password:bcrypt.hashSync(req.body.password, salt)
       };
+
+      let ascii = /^[ -~]+$/;
+
+      for(var propertyName in signup) {
+        console.log(signup[propertyName]);
+        if(!ascii.test(signup[propertyName])) {
+          console.log("this one");
+          console.log(signup[propertyName]);
+          res.json({reason: "invalid-characters"});
+        }
+      }
       if(req.file.size > 5000000 ) {
         res.json({reason:"file-size"});
         return;
@@ -95,13 +114,16 @@ module.exports = function(router) {
                   console.log(err);
                 }
                 else {
-                  Jimp.read(newPath, (err, file) => {
-                    if (err) throw err;
-                    file
-                        .resize(300, 300) // resize
-                        .quality(60) // set JPEG quality
-                        .write(newPath); // save
-                  });
+                  try {
+                    Jimp.read(newPath, (err, file) => {
+                      if (err) throw err;
+                      file
+                          .resize(300, 300) // resize
+                          .quality(60) // set JPEG quality
+                          .write(newPath); // save
+                    });
+                  }
+                  catch(error) {}
                 }
               });
             });

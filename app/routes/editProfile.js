@@ -54,13 +54,17 @@ module.exports = function(router) {
                   console.log(err);
                 }
                 else {
-                  Jimp.read(imagePath, (err, file) => {
-                    if (err) throw err;
-                    file
-                        .resize(300, 300) // resize
-                        .quality(60) // set JPEG quality
-                        .write(imagePath); // save
-                  });
+                  try {
+                    Jimp.read(imagePath, (err, file) => {
+                      if (err) throw err;
+                      file
+                          .resize(300, 300) // resize
+                          .quality(60) // set JPEG quality
+                          .write(imagePath); // save
+                    });
+                  }
+                  catch(error) {
+                  }
                 }
               })
             });

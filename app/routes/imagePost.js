@@ -64,20 +64,25 @@ module.exports = function(router) {
             console.log(err);
           }
           else {
-            Jimp.read(newPath, (err, file) => {
-              if (err) throw err;
-              let fileWidth = file.bitmap.width;
-              let fileHeight = file.bitmap.height;
-              var shrinkAmt = 0;
-              if(fileWidth > 400) {
-                shrinkAmt = 400/fileWidth;
-                file
-                    .resize(400, fileHeight * shrinkAmt) // resize
-                    .quality(60) // set JPEG quality
-                    .write(newPath); // save
+            try {
+              Jimp.read(newPath, (err, file) => {
+                if (err) throw err;
+                let fileWidth = file.bitmap.width;
+                let fileHeight = file.bitmap.height;
+                var shrinkAmt = 0;
+                if(fileWidth > 400) {
+                  shrinkAmt = 400/fileWidth;
+                  file
+                      .resize(400, fileHeight * shrinkAmt) // resize
+                      .quality(60) // set JPEG quality
+                      .write(newPath); // save
 
-              }
-            })
+                }
+              })
+            }
+            catch(error) {
+              
+            }
           }
         });
       });

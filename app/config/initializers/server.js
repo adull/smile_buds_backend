@@ -1,8 +1,6 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
-const session = require('express-session');
-const MySQLStore = require('express-mysql-session')(session);
 
 const port = 9001;
 
@@ -35,15 +33,6 @@ var start = function(cb) {
       connectionLimit: 10000
     };
   }
-
-  var sessionStore = new MySQLStore(mysqlOptions);
-  app.use(session({
-    key: 'session_cookie_name',
-    secret: 'session_cookie_secret',
-    store: sessionStore,
-    resave: false,
-    saveUninitialized: false
-}));
 
 
   app.use(bodyParser.urlencoded({extended: true}));

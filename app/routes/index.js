@@ -1,6 +1,7 @@
 var express = require('express');
 var routes = require('require-dir')();
-const session = require('express-session');
+var cookieSession = require('cookie-session');
+
 
 function changeCase(str) {
   newStr = str.replace(/([A-Z])/g, (g) => `-${g[0].toLowerCase()}`);
@@ -9,14 +10,14 @@ function changeCase(str) {
 
 module.exports = function(app) {
   'use strict';
-  app.use(session({
+  app.use(cookieSession({
     credentials: 'include',
     cookieName: 'session',
     secret: 'eg[isfd-8yF9-7w2315df{}+Ijsli;;to8',
     resave: false,
     saveUninitialized: false,
     cookie: {
-      httpOnly: false,
+      httpOnly: true,
       maxAge: null
     }
   }));
