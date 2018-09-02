@@ -1,6 +1,5 @@
 var db = require('../config/initializers/database');
 var bcrypt = require('bcrypt');
-var session = require('express-session');
 
 module.exports = function(router) {
   router.route('/')

@@ -13,8 +13,6 @@ var upload = multer({ storage : storage}).single('image');
 var fs = require('fs');
 var Jimp = require('jimp');
 
-
-
 const saltRounds = 10;
 
 function toTitleCase(str) {
@@ -61,6 +59,10 @@ module.exports = function(router) {
   router.route('/')
   .post(function(req, res, next) {
     upload(req,res,function(err){
+      if(err) {
+        res.json({reason: ""});
+        return;
+      }
       var salt = bcrypt.genSaltSync(saltRounds);
       var identifier = makeIdentifier(req.body.first_name.trim())
       let emailNotifications = 0;
@@ -81,11 +83,9 @@ module.exports = function(router) {
       let ascii = /^[ -~]+$/;
 
       for(var propertyName in signup) {
-        console.log(signup[propertyName]);
         if(!ascii.test(signup[propertyName])) {
-          console.log("this one");
-          console.log(signup[propertyName]);
           res.json({reason: "invalid-characters"});
+          return;
         }
       }
       if(req.file.size > 5000000 ) {
@@ -95,7 +95,6 @@ module.exports = function(router) {
       let emailExists = false;
       db.doesEmailExist(req.body.email, function(err, results) {
         if(err) {
-          console.log("error in does email exist")
           res.status(500).send("Server error :~()");
           return;
         }
@@ -106,31 +105,33 @@ module.exports = function(router) {
           }
           else {
             fs.readFile(req.file.path, function (err, data) {
-              // let oneDirUp = __dirname.substring(0, __dirname.length - 7);
               let newPath = __dirname + "/profile-pictures/" + identifier + ".png";
               fs.writeFile(newPath, data, function (err) {
                 if(err){
-                  console.log('ERR IN IMAGEPOST -- WRITEFILE')
-                  console.log(err);
+                  // console.log('ERR IN IMAGEPOST -- WRITEFILE')
+                  // console.log(err);
                 }
                 else {
                   try {
                     Jimp.read(newPath, (err, file) => {
-                      if (err) throw err;
+                      if (err)  {
+                        res.json({reason: "error"});
+                        return;
+                      }
                       file
                           .resize(300, 300) // resize
                           .quality(60) // set JPEG quality
                           .write(newPath); // save
                     });
                   }
-                  catch(error) {}
+                  catch(error) {
+                    res.json({reason: "image-properties"});
+                  }
                 }
               });
             });
             db.signup(signup, function(err, results) {
               if(err) {
-                console.log("err in db signup")
-                console.log(err)
                 res.status(500).send("Server error :~(");
                 return;
               }
@@ -142,9 +143,6 @@ module.exports = function(router) {
           }
         }
       })
-      // if(emailExists === false) {
-
-      // }
     })
   });
 }

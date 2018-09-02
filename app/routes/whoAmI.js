@@ -1,5 +1,4 @@
 var db = require('../config/initializers/database');
-var session = require('express-session');
 
 // quickly get user based on cookie
 module.exports = function(router) {

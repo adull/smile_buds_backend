@@ -1,12 +1,10 @@
 var db = require('../config/initializers/database');
-// var session = require('express-session');
 
 // quickly get user based on cookie
 module.exports = function(router) {
   router.route('/')
   .get(function(req, res) {
     var userid = req.session.userid;
-    // req.session
     db.getUser('userid', userid, function(err, results) {
       if(err) {
         console.log(err);
