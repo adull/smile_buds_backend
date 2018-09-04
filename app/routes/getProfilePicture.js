@@ -3,6 +3,12 @@ module.exports = function(router) {
   .get(function(req, res) {
     let hash = req.params.hash;
     let path = '/profile-pictures/' + hash + '.png';
-    res.sendFile(path, {root:__dirname});
+    let fuckYou = '/profile-pictures/a.png';
+    if(hash === undefined || hash === '') {
+      res.sendFile(fuckYou, {root:__dirname});
+    }
+    else {
+      res.sendFile(path, {root:__dirname});
+    }
   })
 }
