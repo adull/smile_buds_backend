@@ -1,7 +1,9 @@
 module.exports = function(router) {
   router.route('/:hash')
   .get(function(req, res) {
+    console.log("get image request");
     let hash = req.params.hash;
+    console.log("hash: " + hash);
     let path = '/uploads/' + hash + '.png';
     let fuckYou = '/profile-pictures/a.png';
     if(hash === undefined || hash === '') {
