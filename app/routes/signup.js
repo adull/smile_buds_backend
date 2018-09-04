@@ -11,7 +11,7 @@ var storage = multer.diskStorage({
 });
 var upload = multer({ storage : storage}).single('image');
 var fs = require('fs');
-var Jimp = require('jimp');
+// var Jimp = require('jimp');
 
 const saltRounds = 10;
 
@@ -112,21 +112,21 @@ module.exports = function(router) {
                   // console.log(err);
                 }
                 else {
-                  try {
-                    Jimp.read(newPath, (err, file) => {
-                      if (err)  {
-                        res.json({reason: "error"});
-                        return;
-                      }
-                      file
-                          .resize(300, 300) // resize
-                          .quality(60) // set JPEG quality
-                          .write(newPath); // save
-                    });
-                  }
-                  catch(error) {
-                    res.json({reason: "image-properties"});
-                  }
+                  // try {
+                  //   Jimp.read(newPath, (err, file) => {
+                  //     if (err)  {
+                  //       res.json({reason: "error"});
+                  //       return;
+                  //     }
+                  //     file
+                  //         .resize(300, 300) // resize
+                  //         .quality(60) // set JPEG quality
+                  //         .write(newPath); // save
+                  //   });
+                  // }
+                  // catch(error) {
+                  //   res.json({reason: "image-properties"});
+                  // }
                 }
               });
             });

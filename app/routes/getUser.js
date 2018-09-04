@@ -16,23 +16,27 @@ module.exports = function(router) {
         res.status(500).send("Server error");
       }
       else {
-
-        if(results[0].id === userid) {
-          results[0].isMe = true;
-        }
-        else {
-          results[0].isMe = false;
-        }
-        let theirId = results[0].id;
-        db.getLove(theirId, userid, function(err, loveAmt) {
-          if(err) {
-            results[0]["love_amount"] = 0;
+        if(results[0]) {
+          if(results[0].id === userid) {
+            results[0].isMe = true;
           }
           else {
-            results[0]["love_amount"] = loveAmt;
-            res.json(results[0]);
+            results[0].isMe = false;
           }
-        })
+          let theirId = results[0].id;
+          db.getLove(theirId, userid, function(err, loveAmt) {
+            if(err) {
+              results[0]["love_amount"] = 0;
+            }
+            else {
+              results[0]["love_amount"] = loveAmt;
+              res.json(results[0]);
+            }
+          })
+        }
+        else {
+          res.json({fake_user: true});
+        }
 
       }
     })

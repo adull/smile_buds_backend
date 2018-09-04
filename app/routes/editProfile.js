@@ -11,7 +11,7 @@ var storage = multer.diskStorage({
 });
 var upload = multer({ storage : storage}).single('image');
 var fs = require('fs');
-var Jimp = require('jimp');
+// var Jimp = require('jimp');
 
 const saltRounds = 10;
 
@@ -53,19 +53,19 @@ module.exports = function(router) {
                   console.log('ERR IN editpROFILE -- WRITEFILE')
                   console.log(err);
                 }
-                else {
-                  try {
-                    Jimp.read(imagePath, (err, file) => {
-                      if (err) throw err;
-                      file
-                          .resize(300, 300) // resize
-                          .quality(60) // set JPEG quality
-                          .write(imagePath); // save
-                    });
-                  }
-                  catch(error) {
-                  }
-                }
+                // else {
+                //   try {
+                //     Jimp.read(imagePath, (err, file) => {
+                //       if (err) throw err;
+                //       file
+                //           .resize(300, 300) // resize
+                //           .quality(60) // set JPEG quality
+                //           .write(imagePath); // save
+                //     });
+                //   }
+                //   catch(error) {
+                //   }
+                // }
               })
             });
             if(editProfile.hobby === '') {
