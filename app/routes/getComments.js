@@ -10,15 +10,18 @@ module.exports = function(router) {
 
     db.getComments(hash, function(err, getCommentsResults) {
       if(err) {
+        // console.log("send this")
         res.status(500).send("Server error");
+        return;
       }
       else {
         db.getPost(hash, function(err, getPostResult) {
           if(err) {
             // console.log(err);
-            console.log("error in get user db call");
-            console.log(err);
+            // console.log("error in get user db call");
+            // console.log(err);
             res.status(500).send("Server error");
+            return;
           }
           if(getPostResult[0]) {
             if(getPostResult[0].poster_id === userid) {
@@ -27,19 +30,20 @@ module.exports = function(router) {
               }
               if(getCommentsResults) {
                 res.json(getCommentsResults);
+                return;
               }
               else {
                 res.end();
+                return;
               }
-              return;
+              // return;
             }
           }
           else if(userid) {
             db.getUser('userid', userid, function(err, getUserResult) {
               if(err) {
-                console.log("error in get user db call");
-                console.log(err);
                 res.status(500).send("Server error");
+                return;
               }
               if(getUserResult[0].type === "admin") {
                 isAdmin = true;
@@ -57,9 +61,11 @@ module.exports = function(router) {
               }
               if(getCommentsResults) {
                 res.json(getCommentsResults);
+                return;
               }
               else {
                 res.end();
+                return;
               }
               return;
             })
@@ -70,15 +76,18 @@ module.exports = function(router) {
             }
             if(getCommentsResults) {
               res.json(getCommentsResults);
+              return;
             }
             else {
               res.end();
+              return;
             }
             return;
           }
         })
         // res.json(results)
-        res.end();
+        // res.end();
+        return;
       }
     })
   })

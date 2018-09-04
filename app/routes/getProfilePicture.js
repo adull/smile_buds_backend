@@ -26,6 +26,7 @@ module.exports = function(router) {
           console.log("err in sendfile")
           console.log(err)
           res.end();
+          return;
         }
       });
       console.log("ok its sent")
@@ -38,6 +39,7 @@ module.exports = function(router) {
           console.log("err in sendfile")
           console.log(err)
           res.end();
+          return;
         }
       });
       console.log("ok its sent")
