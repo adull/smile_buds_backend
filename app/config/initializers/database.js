@@ -164,6 +164,7 @@ exports.getUser = function(searchBy, value, callback) {
         }
         // console.log("USER RESULT:"  + userResult)
         callback(false, userResult);
+        return;
       })
     }
   })
@@ -188,6 +189,7 @@ exports.getUserWithEmail = function(value, callback) {
         }
         // console.log("USER RESULT:"  + userResult)
         callback(false, userResult);
+        return;
       })
     }
   })
@@ -206,9 +208,11 @@ exports.textPost = function(textPostData, callback) {
         if(err) {
           console.log(err);
           callback(true);
+          return;
         }
         else {
           callback(false, result);
+          return;
         }
       })
     }
@@ -228,9 +232,11 @@ exports.getPost = function(hash, callback) {
         if(err) {
           console.log(err);
           callback(true);
+          return;
         }
         else {
           callback(false, result);
+          return;
         }
       })
     }
@@ -250,9 +256,11 @@ exports.getPoster = function(hash, callback) {
         if(err) {
           console.log(err);
           callback(true);
+          return;
         }
         else {
           callback(false, result);
+          return;
         }
       })
     }
@@ -277,10 +285,12 @@ exports.getPosts = function(id, postsReceived, callback) {
         connection.release();
         if(err) {
           callback(true);
+          return;
         }
         else {
           // console.log(result);
           callback(false, result);
+          return;
         }
       })
     }
@@ -298,10 +308,13 @@ exports.getGrins = function(hash, callback) {
       connection.query(getGrinnersSql, function(err, result) {
         connection.release();
         if(err) {
+          callback(true);
           console.log(err);
+          return;
         }
         else {
           callback(false, result);
+          return;
         }
       })
     }
@@ -321,9 +334,11 @@ exports.doesGrinExist = function(hash, userid, callback) {
         if(err) {
           console.log(err);
           callback(true);
+          return;
         }
         else {
           callback(false, result);
+          return;
         }
       })
     }
@@ -344,9 +359,11 @@ exports.grinAt = function(hash, userid, userName, userIdentifier, callback) {
           if(err) {
             console.log(err);
             callback(true);
+            return;
           }
           else {
             callback(false, result);
+            return;
           }
         })
       }
@@ -367,9 +384,11 @@ exports.ungrinAt = function(hash, userid, callback) {
         if(err) {
           console.log(err);
           callback(true);
+          return;
         }
         else {
           callback(false, result);
+          return;
         }
       })
     }
@@ -411,9 +430,11 @@ exports.sendMessage = function(post, callback) {
         if(err) {
           console.log(err);
           callback(true);
+          return;
         }
         else {
           callback(false, result);
+          return;
         }
       })
     }
@@ -434,9 +455,11 @@ exports.getMessagesBetween = function(userOne, userTwo, callback) {
           if(err) {
             console.log(err);
             callback(true);
+            return;
           }
           else {
             callback(false, result);
+            return;
           }
         })
       }
@@ -444,6 +467,7 @@ exports.getMessagesBetween = function(userOne, userTwo, callback) {
   }
   else {
     callback(true);
+    return;
   }
 }
 

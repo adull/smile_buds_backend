@@ -16,6 +16,7 @@ module.exports = function(router) {
         db.getPost(hash, function(err, getPostResult) {
           if(err) {
             console.log(err);
+            res.status(500).send("Server error");
           }
           if(getPostResult[0]) {
             if(getPostResult[0].poster_id === userid) {
@@ -28,6 +29,9 @@ module.exports = function(router) {
           }
           else if(userid) {
             db.getUser('userid', userid, function(err, getUserResult) {
+              if(err) {
+                res.status(500).send("Server error");
+              }
               if(getUserResult[0].type === "admin") {
                 isAdmin = true;
               }
