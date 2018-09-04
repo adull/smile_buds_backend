@@ -14,12 +14,17 @@ module.exports = function(router) {
       }
       else {
         db.getPost(hash, function(err, getPostResult) {
-          if(getPostResult[0].poster_id === userid) {
-            for(var i = 0; i < getCommentsResults.length; i ++) {
-              getCommentsResults[i].deletePermission = true;
+          if(err) {
+            console.log(err);
+          }
+          if(getPostResult[0]) {
+            if(getPostResult[0].poster_id === userid) {
+              for(var i = 0; i < getCommentsResults.length; i ++) {
+                getCommentsResults[i].deletePermission = true;
+              }
+              res.json(getCommentsResults);
+              return;
             }
-            res.json(getCommentsResults);
-            return;
           }
           else if(userid) {
             db.getUser('userid', userid, function(err, getUserResult) {
