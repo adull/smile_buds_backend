@@ -15,6 +15,8 @@ module.exports = function(router) {
       else {
         db.getPost(hash, function(err, getPostResult) {
           if(err) {
+            // console.log(err);
+            console.log("error in get user db call");
             console.log(err);
             res.status(500).send("Server error");
           }
@@ -30,6 +32,8 @@ module.exports = function(router) {
           else if(userid) {
             db.getUser('userid', userid, function(err, getUserResult) {
               if(err) {
+                console.log("error in get user db call");
+                console.log(err);
                 res.status(500).send("Server error");
               }
               if(getUserResult[0].type === "admin") {

@@ -8,6 +8,8 @@ module.exports = function(router) {
 
     db.getGrins(hash, function(err, results) {
       if(err) {
+        console.log("error in get grins");
+        console.log(err);
         res.status(500).send("Server error :~(");
         return;
       }
