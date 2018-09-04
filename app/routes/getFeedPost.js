@@ -15,6 +15,10 @@ module.exports = function(router) {
         if(getPostResult[0]) {
           if(userid) {
             db.getUser('userid', userid, function(err, getUserResult) {
+              if(err) {
+                res.status(500).send("Server error :~()");
+                return;
+              }
               if(getUserResult[0].type === "admin") {
                 getPostResult[0].deletePermission = true;
               }

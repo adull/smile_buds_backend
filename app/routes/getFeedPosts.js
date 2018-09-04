@@ -16,6 +16,10 @@ module.exports = function(router) {
         else {
           if(userid) {
             db.getUser('userid', userid, function(err, result) {
+              if(err) {
+                res.status(500).send("Server error :~()");
+                return;
+              }
               if(result[0].type === "admin") {
                 isAdmin = true;
               }

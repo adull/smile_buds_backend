@@ -27,6 +27,7 @@ module.exports = function(router) {
           db.getLove(theirId, userid, function(err, loveAmt) {
             if(err) {
               results[0]["love_amount"] = 0;
+              res.json(results[0]);
             }
             else {
               results[0]["love_amount"] = loveAmt;

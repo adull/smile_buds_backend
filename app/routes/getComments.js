@@ -25,7 +25,12 @@ module.exports = function(router) {
               for(var i = 0; i < getCommentsResults.length; i ++) {
                 getCommentsResults[i].deletePermission = true;
               }
-              res.json(getCommentsResults);
+              if(getCommentsResults) {
+                res.json(getCommentsResults);
+              }
+              else {
+                res.end();
+              }
               return;
             }
           }
@@ -50,7 +55,12 @@ module.exports = function(router) {
                   getCommentsResults[i].deletePermission = false;
                 }
               }
-              res.json(getCommentsResults);
+              if(getCommentsResults) {
+                res.json(getCommentsResults);
+              }
+              else {
+                res.end();
+              }
               return;
             })
           }
@@ -58,11 +68,17 @@ module.exports = function(router) {
             for(var i = 0; i < getCommentsResults.length; i ++) {
               getCommentsResults[i].deletePermission = false;
             }
-            res.json(getCommentsResults);
+            if(getCommentsResults) {
+              res.json(getCommentsResults);
+            }
+            else {
+              res.end();
+            }
             return;
           }
         })
         // res.json(results)
+        res.end();
       }
     })
   })

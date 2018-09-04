@@ -44,14 +44,23 @@ module.exports = function(router) {
           }
           else {
             fs.readFile(req.file.path, function(err, data) {
+              if(err) {
+                res.status(500).send("Server error :~()");
+                return;
+              }
               let imagePath = __dirname + "/profile-pictures/" + identifier + ".png";
               fs.unlink(imagePath, (err) => {
-                if (err) throw err;
+                if (err) {
+                  res.status(500).send("Server error :~()");
+                  return;
+                }
               })
               fs.writeFile(imagePath, data, function(err) {
                 if(err){
-                  console.log('ERR IN editpROFILE -- WRITEFILE')
-                  console.log(err);
+                  // console.log('ERR IN editpROFILE -- WRITEFILE')
+                  // console.log(err);
+                  res.status(500).send("Server error :~()");
+                  return;
                 }
                 // else {
                 //   try {
