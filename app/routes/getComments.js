@@ -24,6 +24,7 @@ module.exports = function(router) {
             return;
           }
           if(getPostResult[0]) {
+            // console.log("there is a result")
             if(getPostResult[0].poster_id === userid) {
               for(var i = 0; i < getCommentsResults.length; i ++) {
                 getCommentsResults[i].deletePermission = true;
@@ -36,10 +37,11 @@ module.exports = function(router) {
                 res.end();
                 return;
               }
-              // return;
             }
           }
           else if(userid) {
+            // console.log("hash: " + hash);
+            console.log("there is not a result in getting the post")
             db.getUser('userid', userid, function(err, getUserResult) {
               if(err) {
                 res.status(500).send("Server error");
@@ -67,7 +69,7 @@ module.exports = function(router) {
                 res.end();
                 return;
               }
-              return;
+              // return;
             })
           }
           else {
@@ -87,7 +89,7 @@ module.exports = function(router) {
         })
         // res.json(results)
         // res.end();
-        return;
+        // return;
       }
     })
   })
