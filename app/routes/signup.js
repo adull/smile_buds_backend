@@ -88,7 +88,7 @@ module.exports = function(router) {
           return;
         }
       }
-      if(req.file.size > 5000000 ) {
+      if(req.file.size > 1000000 ) {
         res.json({reason:"file-size"});
         return;
       }

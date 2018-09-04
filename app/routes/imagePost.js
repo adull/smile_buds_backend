@@ -52,7 +52,7 @@ module.exports = function(router) {
         poster_id: req.session.userid,
         image: 1
       }
-      if(req.file.size > 5000000 ) {
+      if(req.file.size > 1000000 ) {
         res.json({error_reason:"file-size"});
         return;
       }
