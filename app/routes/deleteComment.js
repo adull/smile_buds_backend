@@ -30,33 +30,35 @@ module.exports = function(router) {
             }
             else {
               //if its their comment
-              if(getCommentResult[0].commenter_id === userid) {
-                db.deleteComment(commentID, function(err, deletePostResult) {
-                  if(err) {
-                    res.status(500).send("Server error");
-                  }
-                  else {
-                    res.json({success: true});
-                    return;
-                  }
-                })
-              }
-              else {
-                let postHash = getCommentResult[0].post_hash;
-                db.getPost(postHash, function(err, getPostResult) {
-                  if(err) {
-                    res.status(500).send("Server error");
-                  }
-                  else {
-                    if(getPostResult[0].poster_id === userid) {
+              if(getCommenterResult[0]) {
+                if(getCommentResult[0].commenter_id === userid) {
+                  db.deleteComment(commentID, function(err, deletePostResult) {
+                    if(err) {
+                      res.status(500).send("Server error");
+                    }
+                    else {
                       res.json({success: true});
                       return;
                     }
-                    else {
-                      res.json({error_reason: 'no-privilege'});
+                  })
+                }
+                else {
+                  let postHash = getCommentResult[0].post_hash;
+                  db.getPost(postHash, function(err, getPostResult) {
+                    if(err) {
+                      res.status(500).send("Server error");
                     }
-                  }
-                })
+                    else {
+                      if(getPostResult[0].poster_id === userid) {
+                        res.json({success: true});
+                        return;
+                      }
+                      else {
+                        res.json({error_reason: 'no-privilege'});
+                      }
+                    }
+                  })
+                }  
               }
             }
           })

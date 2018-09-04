@@ -9,11 +9,12 @@ module.exports = function(router) {
     db.getGrins(hash, function(err, results) {
       if(err) {
         res.status(500).send("Server error :~(");
+        return;
       }
       else {
         res.json(results);
+        return;
       }
     })
   })
-  return;
 }
