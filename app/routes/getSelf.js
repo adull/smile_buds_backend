@@ -9,13 +9,16 @@ module.exports = function(router) {
       if(err) {
         console.log(err);
         res.status(500).send("Server error");
+        return;
       }
       else {
         if(results[0]) {
           res.json(results[0]);
+          return;
         }
         else {
           res.json({"signedIn": false})
+          return;
         }
       }
     })

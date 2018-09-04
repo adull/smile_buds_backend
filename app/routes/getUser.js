@@ -28,17 +28,19 @@ module.exports = function(router) {
             if(err) {
               results[0]["love_amount"] = 0;
               res.json(results[0]);
+              return;
             }
             else {
               results[0]["love_amount"] = loveAmt;
               res.json(results[0]);
+              return;
             }
           })
         }
         else {
           res.json({fake_user: true});
+          return;
         }
-
       }
     })
   })
