@@ -1,4 +1,5 @@
 var db = require('../config/initializers/database');
+var fs = require('fs');
 let multer = require('multer');
 var storage = multer.diskStorage({
   destination: function (req, file, callback) {

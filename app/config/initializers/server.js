@@ -1,4 +1,5 @@
 const express = require('express');
+var compression = require('compression')
 const path = require('path');
 const bodyParser = require('body-parser');
 
@@ -34,7 +35,7 @@ var start = function(cb) {
     };
   }
 
-
+  app.use(compression());
   app.use(bodyParser.urlencoded({extended: true}));
   // app.use(bodyParser.json({type: '*/*'}));
   // app.use(bodyParser.json({type: 'application/json'}));
