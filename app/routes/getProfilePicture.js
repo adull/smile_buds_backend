@@ -6,9 +6,11 @@ module.exports = function(router) {
     let fuckYou = '/profile-pictures/a.png';
     if(hash === undefined || hash === '') {
       res.sendFile(fuckYou, {root:__dirname});
+      return;
     }
     else {
       res.sendFile(path, {root:__dirname});
+      return;
     }
   })
 }
