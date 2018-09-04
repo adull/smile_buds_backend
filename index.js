@@ -50,3 +50,4 @@ var async = require('async');
     } else {
       // console.log('[APP] initialized SUCCESSFULLY');
     }
+  })
