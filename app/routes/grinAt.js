@@ -28,35 +28,40 @@ module.exports = function(router) {
                   res.status(500).send("Server error");
                 }
                 else {
-                  if(result[0].poster_id) {
-                    db.postNotification(result[0].poster_id, userid, user, hash, function(err, postResult) {
-                      if(err) {
-                        res.status(500).send("Server error");
-                      }
-                      else {
-                        var posterId = result[0].poster_id;
-                        if(posterId) {
-                          db.addLove(userid, posterId, function(err, result) {
-                            if(err) {
-                              res.status(500).send("Server error");
-                            }
-                            else {
-                              res.json({success: true});
-                            }
-                          })
+                  if(result[0]) {
+                    if(result[0].poster_id) {
+                      db.postNotification(result[0].poster_id, userid, user, hash, function(err, postResult) {
+                        if(err) {
+                          res.status(500).send("Server error");
                         }
-                      }
-                    })
+                        else {
+                          var posterId = result[0].poster_id;
+                          if(posterId) {
+                            db.addLove(userid, posterId, function(err, result) {
+                              if(err) {
+                                res.status(500).send("Server error");
+                              }
+                              else {
+                                res.json({success: true});
+                              }
+                            })
+                          }
+                        }
+                      })
+                    }
+                    else {
+                      db.addLove(userid, posterId, function(err, result) {
+                        if(err) {
+                          res.status(500).send("Server error");
+                        }
+                        else {
+                          res.json({success: true});
+                        }
+                      })
+                    }
                   }
                   else {
-                    db.addLove(userid, posterId, function(err, result) {
-                      if(err) {
-                        res.status(500).send("Server error");
-                      }
-                      else {
-                        res.json({success: true});
-                      }
-                    })
+                    res.end();
                   }
                 }
               })
