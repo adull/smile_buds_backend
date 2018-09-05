@@ -38,9 +38,9 @@ module.exports = function(router) {
               return;
             }
             else {
-              console.log(process.env);
-              console.log(process.env.SENDGRID_API_KEY);
-              sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+              // console.log(process.env);
+              // console.log(process.env.SENDGRID_API_KEY);
+              sgMail.setApiKey('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');
               const msg = {
                 to: email,
                 from: 'no-reply@smilebuddies.lol',
