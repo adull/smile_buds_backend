@@ -88,9 +88,14 @@ module.exports = function(router) {
           return;
         }
       }
-      if(req.file.size > 1000000 ) {
-        res.json({reason:"file-size"});
-        return;
+      if(req.file) {
+        if(req.file.size > 1000000 ) {
+          res.json({reason:"file-size"});
+          return;
+        }
+      }
+      else {
+        res.end();
       }
       let emailExists = false;
       db.doesEmailExist(req.body.email, function(err, results) {
