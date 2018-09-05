@@ -12,13 +12,18 @@ module.exports = function(router) {
         return;
       }
       else {
-        if(results[0]) {
-          res.json(results[0]);
-          return;
+        if(results) {
+          if(results[0]) {
+            res.json(results[0]);
+            return;
+          }
+          else {
+            res.json({"signedIn": false})
+            return;
+          }
         }
         else {
-          res.json({"signedIn": false})
-          return;
+          res.end();
         }
       }
     })
