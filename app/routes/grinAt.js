@@ -46,6 +46,9 @@ module.exports = function(router) {
                               }
                             })
                           }
+                          else {
+                            res.end();
+                          }
                         }
                       })
                     }

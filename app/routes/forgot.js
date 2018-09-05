@@ -48,6 +48,7 @@ module.exports = function(router) {
                 text: 'Hello, ' + user + '. You recently requested a new password for your account on smilebuddies.lol. Your new password is ' + newPassword + '. To change your password to something you will be more likely to remember, login with this new password, go to your profile by clicking on your name or picture once you log in, and click "Edit profile". This will open a form where you can change your password. Happy smiling!',
                 html: 'Hello, ' + user + '. You recently requested a new password for your account on smilebuddies.lol. Your new password is <strong>' + newPassword + '</strong>. To change your password to something you will be more likely to remember, login with this new password, go to your profile by clicking on your name or picture once you log in, and click "Edit profile". This will open a form where you can change your password. Happy smiling!',
               };
+              // might be some problem here
               sgMail.send(msg);
             }
             res.json({success: true});

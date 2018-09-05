@@ -113,6 +113,7 @@ module.exports = function(router) {
               let newPath = __dirname + "/profile-pictures/" + identifier + ".png";
               fs.writeFile(newPath, data, function (err) {
                 if(err){
+                  res.status(500).send("Server error");
                   // console.log('ERR IN IMAGEPOST -- WRITEFILE')
                   // console.log(err);
                 }

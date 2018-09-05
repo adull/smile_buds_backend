@@ -138,9 +138,6 @@ exports.doesEmailExist = function(email, callback) {
 
 //retrieve user row based on input
 exports.getUser = function(searchBy, value, callback) {
-  // console.log("searchBy:" + searchBy)
-  // console.log("value:" + value)
-  // console.log("inside get user in db")
   if(searchBy === 'userid') {
     var getUserSql = "SELECT id, identifier, first_name, hobby, type FROM user WHERE id='" + value + "';";
   }
@@ -187,7 +184,6 @@ exports.getUserWithEmail = function(value, callback) {
           callback(true);
           return;
         }
-        // console.log("USER RESULT:"  + userResult)
         callback(false, userResult);
         return;
       })
@@ -298,7 +294,7 @@ exports.getPosts = function(id, postsReceived, callback) {
 }
 
 exports.getGrins = function(hash, callback) {
-  let getGrinnersSql = "SELECT user_id, user_name, user_identifier FROM post_grins WHERE post_hash='" + hash + "'";
+  let getGrinnersSql = "SELECT user_id, user_name, user_identifier FROM post_grins WHERE post_hash='" + hash + "' ORDER BY id DESC";
   pool.getConnection(function(err, connection) {
     if(err) {
       callback(true);
@@ -368,6 +364,9 @@ exports.grinAt = function(hash, userid, userName, userIdentifier, callback) {
         })
       }
     })
+  }
+  else {
+    callback(true);
   }
 }
 
@@ -537,6 +536,7 @@ exports.commentNotifications = function(commentNotificationArr, callback) {
             if(err) {
               console.log(err);
               callback(true);
+              return;
             }
           })
         }
@@ -873,7 +873,6 @@ exports.writeComment = function(comment, callback) {
 }
 
 exports.getComment = function(commentID, callback) {
-  console.log(commentID);
   var getCommentSql = "SELECT * FROM comments WHERE id=" + commentID
   pool.getConnection(function(err, connection) {
     if(err) {
@@ -896,7 +895,6 @@ exports.getComment = function(commentID, callback) {
 }
 
 exports.deleteComment = function(commentID, callback) {
-  console.log(commentID);
   var deleteCommentSql = "DELETE FROM comments WHERE id=" + commentID;
   pool.getConnection(function(err, connection) {
     if(err) {

@@ -30,7 +30,6 @@ module.exports = function(router) {
           }
           else {
             if(getPostResult[0].poster_id === userid) {
-
               db.deletePost(hash, function(err, deletePostResult) {
                 if(err) {
                   res.status(500).send("Server error");
@@ -43,7 +42,7 @@ module.exports = function(router) {
             }
             else {
               res.json({error_reason: 'no-privilege'});
-            }  
+            }
           }
         })
       }

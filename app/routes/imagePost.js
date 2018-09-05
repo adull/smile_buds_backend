@@ -63,6 +63,7 @@ module.exports = function(router) {
           if(err){
             console.log('ERR IN IMAGEPOST -- WRITEFILE')
             console.log(err);
+            res.status(500).send("Server error");
           }
           // else {
           //   try {
