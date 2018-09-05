@@ -30,7 +30,7 @@ module.exports = function(router) {
             }
             else {
               //if its their comment
-              if(getCommenterResult[0]) {
+              if(getCommentResult[0]) {
                 if(getCommentResult[0].commenter_id === userid) {
                   db.deleteComment(commentID, function(err, deletePostResult) {
                     if(err) {
@@ -58,7 +58,7 @@ module.exports = function(router) {
                       }
                     }
                   })
-                }  
+                }
               }
             }
           })
