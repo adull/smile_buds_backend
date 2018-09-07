@@ -32,37 +32,42 @@ module.exports = function(router) {
           }
           else {
             // console.log(result[0])
-            usersInvolved.add(result[0].poster_id);
-            db.getCommenters(hash, function(err, results) {
-              if(err) {
-                res.status(500).send("Server error")
-              }
-              else {
-                for(var i = 0; i < results.length; i ++) {
-                  usersInvolved.add(results[i].commenter_id)
+            if(result[0].poster_id) {
+              usersInvolved.add(result[0].poster_id);
+              db.getCommenters(hash, function(err, results) {
+                if(err) {
+                  res.status(500).send("Server error")
                 }
-                let commentNotifications = [];
-                for(let notifForID of usersInvolved) {
-                  let commentNotification = {
-                    notification_type: 'comment',
-                    notification_for: notifForID,
-                    notification_from_id: commenterID,
-                    notification_from_name: commenterName,
-                    post_hash: hash
+                else {
+                  for(var i = 0; i < results.length; i ++) {
+                    usersInvolved.add(results[i].commenter_id)
                   }
-                  commentNotifications.push(commentNotification)
+                  let commentNotifications = [];
+                  for(let notifForID of usersInvolved) {
+                    let commentNotification = {
+                      notification_type: 'comment',
+                      notification_for: notifForID,
+                      notification_from_id: commenterID,
+                      notification_from_name: commenterName,
+                      post_hash: hash
+                    }
+                    commentNotifications.push(commentNotification)
+                  }
+                  db.commentNotifications(commentNotifications, function(err, result) {
+                    if(err) {
+                      res.status(500).send("Server error")
+                    }
+                    else {
+                      res.json({success: true});
+                      return;
+                    }
+                  })
                 }
-                db.commentNotifications(commentNotifications, function(err, result) {
-                  if(err) {
-                    res.status(500).send("Server error")
-                  }
-                  else {
-                    res.json({success: true});
-                    return;
-                  }
-                })
-              }
-            })
+              })
+            }
+            else {
+              res.end();
+            }
           }
         })
       }

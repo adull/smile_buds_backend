@@ -961,3 +961,95 @@ exports.deletePost = function(hash, callback) {
     }
   })
 }
+
+exports.deleteUser = function(identifier, callback) {
+  var deleteUserSql = "DELETE FROM user WHERE identifier = '" + identifier + "';";
+  console.log(deleteUserSql);
+  pool.getConnection(function(err, connection) {
+    if(err) {
+      callback(true);
+      return;
+    }
+    else {
+      connection.query(deleteUserSql, function(err, result) {
+        connection.release();
+        if(err) {
+          console.log(err);
+          callback(true);
+        }
+        else {
+          callback(false, result);
+        }
+      })
+    }
+  })
+}
+
+exports.deleteUserComments = function(identifier, callback) {
+  var deleteUserCommentsSql = "DELETE FROM comments WHERE commenter_identifier = '" + identifier + "';";
+  console.log(deleteUserCommentsSql);
+  pool.getConnection(function(err, connection) {
+    if(err) {
+      callback(true);
+      return;
+    }
+    else {
+      connection.query(deleteUserCommentsSql, function(err, result) {
+        connection.release();
+        if(err) {
+          console.log(err);
+          callback(true);
+        }
+        else {
+          callback(false, result);
+        }
+      })
+    }
+  })
+}
+
+exports.deleteUserPosts = function(id, callback) {
+  var deleteUserPostsSql = "DELETE FROM post WHERE poster_id = " + id + ";";
+  console.log(deleteUserPostsSql)
+  pool.getConnection(function(err, connection) {
+    if(err) {
+      callback(true);
+      return;
+    }
+    else {
+      connection.query(deleteUserPostsSql, function(err, result) {
+        connection.release();
+        if(err) {
+          console.log(err);
+          callback(true);
+        }
+        else {
+          callback(false, result);
+        }
+      })
+    }
+  })
+}
+
+exports.deleteUserMessages = function(id, callback) {
+  var deleteUserMessagesSql = "DELETE FROM messages WHERE (sender = " + id + ") OR (recipient = " + id + ");";
+  console.log(deleteUserMessagesSql)
+  pool.getConnection(function(err, connection) {
+    if(err) {
+      callback(true);
+      return;
+    }
+    else {
+      connection.query(deleteUserMessagesSql, function(err, result) {
+        connection.release();
+        if(err) {
+          console.log(err);
+          callback(true);
+        }
+        else {
+          callback(false, result);
+        }
+      })
+    }
+  })
+}

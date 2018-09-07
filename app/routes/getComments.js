@@ -58,8 +58,10 @@ module.exports = function(router) {
                 res.status(500).send("Server error");
                 return;
               }
-              if(getUserResult[0].type === "admin") {
-                isAdmin = true;
+              if(getUserResult[0]) {
+                if(getUserResult[0].type === "admin") {
+                  isAdmin = true;
+                }  
               }
               for(var i = 0; i < getCommentsResults.length; i ++) {
                 if(isAdmin) {

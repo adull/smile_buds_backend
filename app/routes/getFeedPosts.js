@@ -20,8 +20,14 @@ module.exports = function(router) {
                 res.status(500).send("Server error :~()");
                 return;
               }
-              if(result[0].type === "admin") {
-                isAdmin = true;
+              else {
+                if(result[0]) {
+                  // console.log("yea");
+                  // console.log(result[0]);
+                  if(result[0].type === "admin") {
+                    isAdmin = true;
+                  }
+                }
               }
               for(var i = 0; i < getPostsResults.length; i ++) {
                 if(isAdmin) {
@@ -65,8 +71,10 @@ module.exports = function(router) {
                 else {
                   if(userid) {
                     db.getUser('userid', userid, function(err, result) {
-                      if(result[0].type === "admin") {
-                        isAdmin = true;
+                      if(result[0]) {
+                        if(result[0].type === "admin") {
+                          isAdmin = true;
+                        }
                       }
                       for(var i = 0; i < getPostsResults.length; i ++) {
                         if(isAdmin) {

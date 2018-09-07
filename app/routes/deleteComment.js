@@ -50,11 +50,19 @@ module.exports = function(router) {
                     }
                     else {
                       if(getPostResult[0].poster_id === userid) {
-                        res.json({success: true});
-                        return;
+                        db.deleteComment(commentID, function(err, deletePostResult) {
+                          if(err) {
+                            res.status(500).send("Server error");
+                          }
+                          else {
+                            res.json({success: true});
+                            return;
+                          }
+                        })
                       }
                       else {
                         res.json({error_reason: 'no-privilege'});
+                        return;
                       }
                     }
                   })
@@ -66,6 +74,7 @@ module.exports = function(router) {
       }
       else {
         res.json({error_reason: 'no-user'})
+        return;
       }
     })
   })
