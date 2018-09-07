@@ -44,8 +44,16 @@ module.exports = function(router) {
                               res.status(500).send("Server error");
                             }
                             else {
-                              res.json({success: true});
-                              return;
+                              db.deleteUserGrins(deleteIdentifier, function(err, deleteUserGrinsResult) {
+                                if(err) {
+                                  console.log("error in delete user grins")
+                                  res.status(500).send("Server error");
+                                }
+                                else {
+                                  res.json({success: true});
+                                  return;
+                                }
+                              })
                             }
                           })
                         }
@@ -55,17 +63,20 @@ module.exports = function(router) {
                 }
               });
             }
+            // user to delete doesnt exist (some other admin deleted already)
             else {
               res.end();
               return;
             }
           });
         }
+        // user isnt an admin
         else {
           res.end();
           return;
         }
       }
+      // no user
       else {
         res.end();
         return;

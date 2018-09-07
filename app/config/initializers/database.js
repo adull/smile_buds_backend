@@ -964,7 +964,7 @@ exports.deletePost = function(hash, callback) {
 
 exports.deleteUser = function(identifier, callback) {
   var deleteUserSql = "DELETE FROM user WHERE identifier = '" + identifier + "';";
-  console.log(deleteUserSql);
+  // console.log(deleteUserSql);
   pool.getConnection(function(err, connection) {
     if(err) {
       callback(true);
@@ -987,7 +987,7 @@ exports.deleteUser = function(identifier, callback) {
 
 exports.deleteUserComments = function(identifier, callback) {
   var deleteUserCommentsSql = "DELETE FROM comments WHERE commenter_identifier = '" + identifier + "';";
-  console.log(deleteUserCommentsSql);
+  // console.log(deleteUserCommentsSql);
   pool.getConnection(function(err, connection) {
     if(err) {
       callback(true);
@@ -1010,7 +1010,7 @@ exports.deleteUserComments = function(identifier, callback) {
 
 exports.deleteUserPosts = function(id, callback) {
   var deleteUserPostsSql = "DELETE FROM post WHERE poster_id = " + id + ";";
-  console.log(deleteUserPostsSql)
+  // console.log(deleteUserPostsSql)
   pool.getConnection(function(err, connection) {
     if(err) {
       callback(true);
@@ -1033,7 +1033,7 @@ exports.deleteUserPosts = function(id, callback) {
 
 exports.deleteUserMessages = function(id, callback) {
   var deleteUserMessagesSql = "DELETE FROM messages WHERE (sender = " + id + ") OR (recipient = " + id + ");";
-  console.log(deleteUserMessagesSql)
+  // console.log(deleteUserMessagesSql)
   pool.getConnection(function(err, connection) {
     if(err) {
       callback(true);
@@ -1041,6 +1041,29 @@ exports.deleteUserMessages = function(id, callback) {
     }
     else {
       connection.query(deleteUserMessagesSql, function(err, result) {
+        connection.release();
+        if(err) {
+          console.log(err);
+          callback(true);
+        }
+        else {
+          callback(false, result);
+        }
+      })
+    }
+  })
+}
+
+exports.deleteUserGrins = function(identifier, callback) {
+  var deleteUserGrinsSql = "DELETE FROM post_grins WHERE user_identifier = '"+ identifier + "'";
+  console.log(deleteUserGrinsSql)
+  pool.getConnection(function(err, connection) {
+    if(err) {
+      callback(true);
+      return;
+    }
+    else {
+      connection.query(deleteUserGrinsSql, function(err, result) {
         connection.release();
         if(err) {
           console.log(err);
