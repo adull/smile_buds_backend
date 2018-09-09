@@ -27,6 +27,7 @@ exports.signup = function(signupData, callback) {
     }
     else {
       connection.query(postSignupSql, signupData, function(err, result) {
+        console.log(postSignupSql);
         connection.release();
         if(err) {
           console.log(err);
@@ -1056,7 +1057,7 @@ exports.deleteUserMessages = function(id, callback) {
 
 exports.deleteUserGrins = function(identifier, callback) {
   var deleteUserGrinsSql = "DELETE FROM post_grins WHERE user_identifier = '"+ identifier + "'";
-  console.log(deleteUserGrinsSql)
+  // console.log(deleteUserGrinsSql)
   pool.getConnection(function(err, connection) {
     if(err) {
       callback(true);
@@ -1075,4 +1076,78 @@ exports.deleteUserGrins = function(identifier, callback) {
       })
     }
   })
+}
+
+exports.getBiggestGrins = function(interval, callback) {
+  var getBiggestGrinsSql = ''
+  if(interval === 'day') {
+    getBiggestGrinsSql = "SELECT post_grins.post_hash, COUNT(post_grins.post_hash) as count FROM post_grins LEFT JOIN post ON post.time WHERE YEAR(post.time) = YEAR(CURRENT_DATE - INTERVAL 1 MONTH) AND MONTH(post.time) = MONTH(CURRENT_DATE - INTERVAL 0 MONTH) AND DAY(post.time) >= DAY(CURRENT_DATE - INTERVAL 1 DAY) and post.hash=post_grins.post_hash GROUP BY post_grins.post_hash ORDER BY count DESC";
+  }
+  else if(interval === 'week') {
+    getBiggestGrinsSql = "SELECT post_grins.post_hash, COUNT(post_grins.post_hash) as count FROM post_grins LEFT JOIN post ON post.time WHERE YEAR(post.time) = YEAR(CURRENT_DATE - INTERVAL 1 MONTH) AND MONTH(post.time) = MONTH(CURRENT_DATE - INTERVAL 0 MONTH) AND DAY(post.time) >= DAY(CURRENT_DATE - INTERVAL 7 DAY) and post.hash=post_grins.post_hash GROUP BY post_grins.post_hash ORDER BY count DESC";
+  }
+  else if(interval === 'month') {
+    getBiggestGrinsSql = 'SELECT post_grins.post_hash, COUNT(post_grins.post_hash) as count FROM post_grins LEFT JOIN post ON post.time WHERE post_grins.post_hash=post.hash AND YEAR(post.time) = YEAR(CURRENT_DATE - INTERVAL 1 MONTH) AND MONTH(post.time) >= MONTH(CURRENT_DATE - INTERVAL 1 MONTH) and post.hash=post_grins.post_hash GROUP BY post_grins.post_hash ORDER BY count DESC';
+  }
+  else if(interval === 'all-time') {
+    getBiggestGrinsSql = 'SELECT post_grins.post_hash, COUNT(post_grins.post_hash) as count FROM post_grins GROUP BY post_grins.post_hash ORDER BY count DESC'
+  }
+  else {
+    callback(true);
+  }
+  // console.log(getBiggestGrinsSql);
+  pool.getConnection(function(err, connection) {
+    if(err) {
+      callback(true);
+      return;
+    }
+    else {
+      connection.query(getBiggestGrinsSql, function(err, result) {
+        connection.release();
+        if(err) {
+          console.log(err);
+          callback(true);
+        }
+        else {
+          callback(false, result);
+        }
+      })
+    }
+  })
+}
+
+exports.getSpecificPosts = function(posts, callback) {
+  // console.log(posts);
+  var getSpecificPostsSql = 'SELECT * FROM post WHERE'
+  var whereClause = '';
+  if(posts.length > 0) {
+    for(var i = 0; i < posts.length; i ++) {
+      whereClause += " hash='" + posts[i] + "'";
+      if(i < posts.length - 1) {
+        whereClause += " OR"
+      }
+    }
+    getSpecificPostsSql += whereClause;
+    pool.getConnection(function(err, connection) {
+      if(err) {
+        callback(true);
+        return;
+      }
+      else {
+        connection.query(getSpecificPostsSql, function(err, result) {
+          connection.release();
+          if(err) {
+            console.log(err);
+            callback(true);
+          }
+          else {
+            callback(false, result);
+          }
+        })
+      }
+    })
+  }
+  else {
+    callback(true);
+  }
 }
