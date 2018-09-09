@@ -1079,6 +1079,7 @@ exports.deleteUserGrins = function(identifier, callback) {
 }
 
 exports.getBiggestGrins = function(interval, callback) {
+  console.log(interval);
   var getBiggestGrinsSql = ''
   if(interval === 'day') {
     getBiggestGrinsSql = "SELECT post_grins.post_hash, COUNT(post_grins.post_hash) as count FROM post_grins LEFT JOIN post ON post.time WHERE YEAR(post.time) = YEAR(CURRENT_DATE - INTERVAL 1 MONTH) AND MONTH(post.time) = MONTH(CURRENT_DATE - INTERVAL 0 MONTH) AND DAY(post.time) >= DAY(CURRENT_DATE - INTERVAL 1 DAY) and post.hash=post_grins.post_hash GROUP BY post_grins.post_hash ORDER BY count DESC";
