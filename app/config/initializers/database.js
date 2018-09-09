@@ -27,6 +27,7 @@ exports.signup = function(signupData, callback) {
     }
     else {
       connection.query(postSignupSql, signupData, function(err, result) {
+        console.log(postSignupSql);
         connection.release();
         if(err) {
           console.log(err);
@@ -1056,7 +1057,7 @@ exports.deleteUserMessages = function(id, callback) {
 
 exports.deleteUserGrins = function(identifier, callback) {
   var deleteUserGrinsSql = "DELETE FROM post_grins WHERE user_identifier = '"+ identifier + "'";
-  console.log(deleteUserGrinsSql)
+  // console.log(deleteUserGrinsSql)
   pool.getConnection(function(err, connection) {
     if(err) {
       callback(true);
