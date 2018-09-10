@@ -1113,3 +1113,27 @@ exports.getSpecificPosts = function(posts, callback) {
     callback(true);
   }
 }
+
+
+exports.searchUserLike = function(searchQuery, callback) {
+  var searchUserLikeSql = "SELECT * FROM user WHERE first_name LIKE '%" + searchQuery + "%'";
+  // console.log(searchUserLikeSql);
+  pool.getConnection(function(err, connection) {
+    if(err) {
+      callback(true);
+      return;
+    }
+    else {
+      connection.query(searchUserLikeSql, function(err, results) {
+        connection.release();
+        if(err) {
+          console.log(err);
+          callback(true);
+        }
+        else {
+          callback(false, results);
+        }
+      })
+    }
+  })
+}
