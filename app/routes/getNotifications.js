@@ -23,7 +23,6 @@ module.exports = function(router) {
             }
             else {
               let postMessageNotifications = postNotifications.concat(messageNotifications);
-              // res.json(allNotifications);
               db.getCommentNotifications(userid, function(err, commentNotifications) {
                 if(err) {
                   res.status(500).send("Server error");

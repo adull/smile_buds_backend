@@ -44,6 +44,7 @@ module.exports = function(router) {
                   }
                   let commentNotifications = [];
                   for(let notifForID of usersInvolved) {
+                    // console.log(commenterID)
                     let commentNotification = {
                       notification_type: 'comment',
                       notification_for: notifForID,
@@ -51,6 +52,7 @@ module.exports = function(router) {
                       notification_from_name: commenterName,
                       post_hash: hash
                     }
+                    // console.log(commentNotification);
                     commentNotifications.push(commentNotification)
                   }
                   db.commentNotifications(commentNotifications, function(err, result) {
