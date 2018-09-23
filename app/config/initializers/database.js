@@ -318,7 +318,7 @@ exports.getGrins = function(hash, callback) {
   })
 }
 
-exports.doesGrinExist = function(hash, userid, callback) {
+exports.doesPostGrinExist = function(hash, userid, callback) {
   let doesGrinExistSql = "SELECT * FROM post_grins WHERE post_hash='" + hash + "' AND user_id=" + userid;
   pool.getConnection(function(err, connection) {
     if(err) {
@@ -342,7 +342,7 @@ exports.doesGrinExist = function(hash, userid, callback) {
   })
 }
 
-exports.grinAt = function(hash, userid, userName, userIdentifier, callback) {
+exports.grinAtPost = function(hash, userid, userName, userIdentifier, callback) {
   if(userid) {
     let grinAtSql = "INSERT IGNORE INTO post_grins (post_hash, user_id, user_name, user_identifier) VALUES('" + hash + "', " + userid + ", '" + userName + "', '" + userIdentifier + "')";
     pool.getConnection(function(err, connection) {
@@ -371,7 +371,7 @@ exports.grinAt = function(hash, userid, userName, userIdentifier, callback) {
   }
 }
 
-exports.ungrinAt = function(hash, userid, callback) {
+exports.ungrinAtPost = function(hash, userid, callback) {
   let ungrinSql = "DELETE FROM post_grins WHERE post_hash='" + hash + "' AND user_id=" + userid;
   pool.getConnection(function(err, connection) {
     if(err) {
@@ -552,7 +552,7 @@ exports.commentNotifications = function(commentNotificationArr, callback) {
     })
   }
   else {
-    callback(true)  
+    callback(true)
   }
 };
 
@@ -1125,7 +1125,6 @@ exports.getSpecificPosts = function(posts, callback) {
 
 exports.searchUserLike = function(searchQuery, callback) {
   var searchUserLikeSql = "SELECT * FROM user WHERE first_name LIKE '%" + searchQuery + "%'";
-  // console.log(searchUserLikeSql);
   pool.getConnection(function(err, connection) {
     if(err) {
       callback(true);
@@ -1144,4 +1143,103 @@ exports.searchUserLike = function(searchQuery, callback) {
       })
     }
   })
+}
+
+exports.doesCommentGrinExist = function(commentID, grinnerIdentifier, callback) {
+  let doesGrinExistSql = "SELECT * FROM comment_grins WHERE comment_id=" + commentID + " AND grinner_identifier='" + grinnerIdentifier + "'";
+  pool.getConnection(function(err, connection) {
+    if(err) {
+      callback(true);
+      return;
+    }
+    else {
+      connection.query(doesGrinExistSql, function(err, result) {
+        connection.release();
+        if(err) {
+          console.log(err);
+          callback(true);
+          return;
+        }
+        else {
+          callback(false, result);
+          return;
+        }
+      })
+    }
+  })
+}
+
+exports.ungrinAtComment = function(commentID, grinnerIdentifier, callback) {
+  let ungrinAtCommentSql = "DELETE FROM comment_grins WHERE comment_id=" + commentID + " AND grinner_identifier='" + grinnerIdentifier + "'";
+  pool.getConnection(function(err, connection) {
+    if(err) {
+      callback(true);
+      return;
+    }
+    else {
+      connection.query(ungrinAtCommentSql, function(err, results) {
+        connection.release();
+        if(err) {
+          console.log(err);
+          callback(true);
+        }
+        else {
+          callback(false, results);
+        }
+      })
+    }
+  })
+}
+
+exports.grinAtComment = function(commentID, grinnerIdentifier, grinnerName, callback) {
+  var grinAtCommentSql = "INSERT IGNORE INTO comment_grins (comment_id, grinner_identifier, grinner_name) VALUES(" + commentID + ", '" + grinnerIdentifier + "', '" + grinnerName + "' )"
+  pool.getConnection(function(err, connection) {
+    if(err) {
+      callback(true);
+      return;
+    }
+    else {
+      connection.query(grinAtCommentSql, function(err, results) {
+        connection.release();
+        if(err) {
+          console.log(err);
+          callback(true);
+        }
+        else {
+          callback(false, results);
+        }
+      })
+    }
+  })
+}
+
+exports.getCommentGrins = function(commentArr, callback) {
+  var getCommentGrinsSql = 'SELECT * FROM comment_grins WHERE'
+  var whereClause = '';
+  if(commentArr.length > 0) {
+    for(var i = 0; i < commentArr.length; i ++) {
+      whereClause += " comment_id='" + commentArr[i].id + "'";
+      if(i < commentArr.length - 1) {
+        whereClause += " OR"
+      }
+    }
+    getCommentGrinsSql += whereClause
+    pool.getConnection(function(err, connection) {
+      if(err) {
+        callback(true);
+        return;
+      }
+      else {
+        connection.query(getCommentGrinsSql, function(err, results) {
+          connection.release();
+          if(err) {
+            callback(true);
+          }
+          else {
+            callback(false, results);
+          }
+        })
+      }
+    })
+  }
 }

@@ -12,7 +12,7 @@ module.exports = function(router) {
       return;
     }
 
-    db.ungrinAt(hash, userid, function(err, results) {
+    db.ungrinAtPost(hash, userid, function(err, results) {
       if(err) {
         res.status(500).send("Server error");
       }

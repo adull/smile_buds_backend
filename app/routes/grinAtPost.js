@@ -13,9 +13,9 @@ module.exports = function(router) {
       return;
     }
     else {
-      db.doesGrinExist(hash, userid, function(err, doesGrinExistResult) {
+      db.doesPostGrinExist(hash, userid, function(err, doesGrinExistResult) {
         if(doesGrinExistResult.length === 0) {
-          db.grinAt(hash, userid, user, userIdentifier, function(err, results) {
+          db.grinAtPost(hash, userid, user, userIdentifier, function(err, results) {
             if(err) {
               res.status(500).send("Server error");
             }
