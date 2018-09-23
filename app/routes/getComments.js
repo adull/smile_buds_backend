@@ -10,12 +10,14 @@ module.exports = function(router) {
 
     db.getComments(hash, function(err, getCommentsResults) {
       if(err) {
+        // console.log(14)
         res.status(500).send("Server error");
         return;
       }
       else {
         db.getPost(hash, function(err, getPostResult) {
           if(err) {
+            // console.log(21);
             res.status(500).send("Server error");
             return;
           }
@@ -26,8 +28,9 @@ module.exports = function(router) {
             if(getCommentsResults) {
               var commentGrinsArr = [];
               var individualCommentGrinsArr = [];
-                db.getCommentGrins(getCommentsResults, function(err, getCommentGrinsResults) {
+              db.getCommentGrins(getCommentsResults, function(err, getCommentGrinsResults) {
                 if(err) {
+                  // console.log(34)
                   res.status(500).send("Server error");
                   return;
                 }
@@ -42,12 +45,14 @@ module.exports = function(router) {
                       getCommentGrinsResults[i].didIGrin = false;
                     }
                   }
+                  // console.log(49)
                   res.json({commentResults: getCommentsResults, commentGrins: getCommentGrinsResults});
                   return;
                 }
               })
             }
             else {
+              // console.log(56)
               res.end();
               return;
             }
@@ -56,6 +61,7 @@ module.exports = function(router) {
           else if(userid) {
             db.getUser('userid', userid, function(err, getUserResult) {
               if(err) {
+                console.log(65)
                 res.status(500).send("Server error");
                 return;
               }
@@ -80,6 +86,7 @@ module.exports = function(router) {
                 var individualCommentGrinsArr = [];
                 db.getCommentGrins(getCommentsResults, function(err, getCommentGrinsResults) {
                   if(err) {
+                    console.log(90)
                     res.status(500).send("Server error");
                     return;
                   }
@@ -94,12 +101,19 @@ module.exports = function(router) {
                         getCommentGrinsResults[i].didIGrin = false;
                       }
                     }
-                    res.json({commentResults: getCommentsResults, commentGrins: getCommentGrinsResults});
-                    return;
+                    console.log(105)
+                    if(getCommentsResults && getCommentGrinsResults) {
+                      res.json({commentResults: getCommentsResults, commentGrins: getCommentGrinsResults});
+                      return;
+                    }
+                    else {
+                      res.end();
+                    }
                   }
                 })
               }
               else {
+                console.log(112)
                 res.end();
                 return;
               }
@@ -114,6 +128,7 @@ module.exports = function(router) {
               var individualCommentGrinsArr = [];
               db.getCommentGrins(getCommentsResults, function(err, getCommentGrinsResults) {
                 if(err) {
+                  // console.log(127)
                   res.status(500).send("Server error");
                   return;
                 }
@@ -128,12 +143,14 @@ module.exports = function(router) {
                       getCommentGrinsResults[i].didIGrin = false;
                     }
                   }
+                  // console.log(141)
                   res.json({commentResults: getCommentsResults, commentGrins: getCommentGrinsResults});
                   return;
                 }
               })
             }
             else {
+              // console.log(149)
               res.end();
               return;
             }
