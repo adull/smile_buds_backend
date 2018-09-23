@@ -1242,4 +1242,7 @@ exports.getCommentGrins = function(commentArr, callback) {
       }
     })
   }
+  else {
+    callback(false, []);
+  }
 }
