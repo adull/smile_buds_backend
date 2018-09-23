@@ -20,7 +20,7 @@ module.exports = function(router) {
               res.status(500).send("Server error");
               return;
             }
-            if(getPostResult[0].poster_id === userid) {
+            else if(getPostResult[0].poster_id === userid) {
               for(var i = 0; i < getCommentsResults.length; i ++) {
                 getCommentsResults[i].deletePermission = true;
               }
@@ -62,9 +62,10 @@ module.exports = function(router) {
               }
             }
             else if(userid) {
+              console.log("there is a user -" + hash)
               db.getUser('userid', userid, function(err, getUserResult) {
                 if(err) {
-                  console.log(65)
+                  console.log(65 + "-" + hash)
                   res.status(500).send("Server error");
                   return;
                 }
@@ -85,11 +86,12 @@ module.exports = function(router) {
                   }
                 }
                 if(getCommentsResults) {
+                  console.log("get comments results is not null -" + hash)
                   var commentGrinsArr = [];
                   var individualCommentGrinsArr = [];
                   db.getCommentGrins(getCommentsResults, function(err, getCommentGrinsResults) {
                     if(err) {
-                      // console.log(90)
+                      console.log(94 + "-" + hash)
                       res.status(500).send("Server error");
                       return;
                     }
@@ -108,6 +110,7 @@ module.exports = function(router) {
                         }
                       }
                       if(getCommentsResults && getCommentGrinsResults) {
+                        console.log(113 + "-" + hash)
                         res.json({commentResults: getCommentsResults, commentGrins: getCommentGrinsResults});
                         return;
                       }
