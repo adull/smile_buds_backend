@@ -62,10 +62,8 @@ module.exports = function(router) {
               }
             }
             else if(userid) {
-              console.log("there is a user -" + hash)
               db.getUser('userid', userid, function(err, getUserResult) {
                 if(err) {
-                  console.log(65 + "-" + hash)
                   res.status(500).send("Server error");
                   return;
                 }
@@ -86,17 +84,14 @@ module.exports = function(router) {
                   }
                 }
                 if(getCommentsResults) {
-                  console.log("get comments results is not null -" + hash)
                   var commentGrinsArr = [];
                   var individualCommentGrinsArr = [];
                   db.getCommentGrins(getCommentsResults, function(err, getCommentGrinsResults) {
                     if(err) {
-                      console.log(94 + "-" + hash)
                       res.status(500).send("Server error");
                       return;
                     }
                     else {
-                      console.log("length of this for loop " + getCommentGrinsResults.length)
                       for(var i = 0; i < getCommentGrinsResults.length; i++) {
                         if(userIdentifier) {
                           if(getCommentGrinsResults[i].grinner_identifier === userIdentifier) {
@@ -110,14 +105,11 @@ module.exports = function(router) {
                           getCommentGrinsResults[i].didIGrin = false;
                         }
                       }
-                      console.log("done w for loop")
                       if(getCommentsResults && getCommentGrinsResults) {
-                        console.log(113 + "-" + hash)
                         res.json({commentResults: getCommentsResults, commentGrins: getCommentGrinsResults});
                         return;
                       }
                       else {
-                        console.log("there isn't get comments results or get comment grins results")
                         res.end();
                       }
                     }
@@ -174,8 +166,6 @@ module.exports = function(router) {
       })
     }
     catch(error) {
-      console.log(171)
-      console.log(error);
       res.end();
     }
 
