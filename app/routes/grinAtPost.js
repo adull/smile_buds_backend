@@ -72,7 +72,7 @@ module.exports = function(router) {
           })
         }
         else {
-          res.end();
+          res.json({success: true});
         }
       })
     }
