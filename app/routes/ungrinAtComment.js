@@ -29,9 +29,11 @@ module.exports = function(router) {
                 if(err) {
                   console.log(err)
                   res.status(500).send("Server error");
+                  return;
                 }
                 else {
                   res.json({success: true});
+                  return;
                 }
               })
             }

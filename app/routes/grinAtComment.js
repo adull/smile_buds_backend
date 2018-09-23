@@ -16,6 +16,7 @@ module.exports = function(router) {
           db.grinAtComment(commentID, userIdentifier, userName, function(err, results) {
             if(err) {
               res.status(500).send("Server error");
+              return;
             }
             else {
               res.json({success: true});
