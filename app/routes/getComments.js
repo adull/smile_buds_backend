@@ -96,6 +96,7 @@ module.exports = function(router) {
                       return;
                     }
                     else {
+                      console.log("length of this for loop " + getCommentGrinsResults.length)
                       for(var i = 0; i < getCommentGrinsResults.length; i++) {
                         if(userIdentifier) {
                           if(getCommentGrinsResults[i].grinner_identifier === userIdentifier) {
@@ -109,6 +110,7 @@ module.exports = function(router) {
                           getCommentGrinsResults[i].didIGrin = false;
                         }
                       }
+                      console.log("done w for loop")
                       if(getCommentsResults && getCommentGrinsResults) {
                         console.log(113 + "-" + hash)
                         res.json({commentResults: getCommentsResults, commentGrins: getCommentGrinsResults});
