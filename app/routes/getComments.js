@@ -115,6 +115,7 @@ module.exports = function(router) {
                         return;
                       }
                       else {
+                        console.log("there isn't get comments results or get comment grins results")
                         res.end();
                       }
                     }
