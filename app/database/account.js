@@ -28,7 +28,7 @@ module.exports = {
      */
     updateHobby: async (hobby, identifier) => {
         return new Promise((resolve, reject) => {
-            pool.query('UPDATE user SET hobby = ? WHERE identifier ?', [hobby, identifier], (error, result) => {
+            pool.query('UPDATE user SET hobby = ? WHERE identifier = ?', [hobby, identifier], (error, result) => {
                 if (error) {
                     reject(error);
                 }
