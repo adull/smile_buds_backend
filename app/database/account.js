@@ -1,5 +1,12 @@
 const mysql = require('mysql');
 
+/**
+ * A list of columns in the user table
+ * ( needs to be updated )
+ * @type {String[]}
+ */
+const userFields = ['username', 'password', 'hobby', 'identifier'];
+
 module.exports = {
     /**
      * Adds a user to the database
@@ -20,15 +27,34 @@ module.exports = {
     },
 
     /**
-     * Updates a user's hobby
+     * Updates a user's information
      * 
-     * @param {String} hobby
-     * @param {String} identifier
+     * @param {Object} data A map of column => value pairs
+     * @param {String} identifier A unique identifier for the user
      * @returns {Promise}
      */
-    updateHobby: async (hobby, identifier) => {
+    update: async (data, identifier) => {
         return new Promise((resolve, reject) => {
-            pool.query('UPDATE user SET hobby = ? WHERE identifier = ?', [hobby, identifier], (error, result) => {
+            let query  = 'UPDATE `user` SET',
+                keys   = Object.keys(data),
+                values = Object.values(data);
+
+            for (let i = 0; i < keys.length; i++) {
+                if (userFields.includes(values[i]) === false) {
+                    reject({ error: `${keys[i]} is not a column or is immutable` });
+                }
+
+                query += ` ${keys[i]} = ? `;
+
+                if (i !== keys.length) {
+                    query += 'AND';
+                }
+            }
+
+            query += 'WHERE `identifier` = ?';
+            values.push(identifier);
+
+            pool.query(query, values, (error, result) => {
                 if (error) {
                     reject(error);
                 }
