@@ -1,7 +1,15 @@
 const mysql = require('mysql');
 
+const pool = mysql.createPool({
+    user:      'root',
+    password:  'root',
+    host:      'localhost',
+    port:      (process.env.NODE_ENV == 'production' ? 3306 : 8889),
+    database:  'smile_buds'
+});
+
 /**
- * A list of columns in the user table
+ * A list of columns in the user table that may be updated
  * ( needs to be updated )
  * @type {String[]}
  */
