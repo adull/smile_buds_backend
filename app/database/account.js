@@ -35,6 +35,55 @@ module.exports = {
     },
 
     /**
+     * Selects a user from the database.
+     * 
+     * @param {String|String[]} columns
+     * @param {Object} clauses
+     * @returns {Promise}
+     */
+    read: async (columns, clauses = {}) => {
+        return new Promise((resolve, reject) => {
+            let query = 'SELECT';
+
+            if (typeof columns == 'string') {
+                query += ` ${columns}`;
+            } else if (typeof columns == 'object') {
+                for (let column of columns) {
+                    query += ` ${column}`;
+
+                    if (column !== columns[ columns.length - 1 ]) {
+                        query += ',';
+                    }
+                }
+            }
+
+            query += ' FROM user';
+
+            if (clauses.length > 0) {
+                query += ' WHERE';
+                clauses = Object.entries(clauses);
+
+                for (let i = 0; i < clauses.length; i++) {
+                    [column, value] = clauses[i];
+                    query += ` ${column} = ${value} `;
+
+                    if (i !== clauses.length - 1) {
+                        query += 'AND';
+                    }
+                }
+            }
+
+            pool.query(query, (error, result) => {
+                if (error) {
+                    reject(error);
+                }
+
+                resolve(result);
+            });
+        });
+    },
+
+    /**
      * Updates a user's information
      * 
      * @param {Object} data A map of column => value pairs
@@ -54,7 +103,7 @@ module.exports = {
 
                 query += ` ${keys[i]} = ? `;
 
-                if (i !== keys.length) {
+                if (i !== keys.length - 1) {
                     query += 'AND';
                 }
             }
