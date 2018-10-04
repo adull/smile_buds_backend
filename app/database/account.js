@@ -72,7 +72,7 @@ module.exports = {
      * @param {String} identifier
      * @returns {Promise}
      */
-    editProfileEmailNotification: async (notification, identifier) => {
+    editProfileEmailNotifications: async (notification, identifier) => {
         return new Promise((resolve, reject) => {
             pool.query('UPDATE user SET email_notifications = ? WHERE identifier = ?', [notification, identifier], (error, result) => {
                 if (error) {
