@@ -1,5 +1,13 @@
 const mysql = require('mysql');
 
+const pool = mysql.createPool({
+    user:      'root',
+    password:  'root',
+    host:      'localhost',
+    port:      (process.env.NODE_ENV == 'production' ? 3306 : 8889),
+    database:  'smile_buds'
+});
+
 module.exports = {
     /**
      * Adds a user to the database
