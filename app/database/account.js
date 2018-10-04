@@ -53,7 +53,7 @@ module.exports = {
      * @param {String} identifier
      * @returns {Promise}
      */
-    editProfilePassword: async (password, identifier) => {
+    updatePassword: async (password, identifier) => {
         return new Promise((resolve, reject) => {
             pool.query('UPDATE user SET password = ? WHERE identifier = ?', [password, identifier], (error, result) => {
                 if (error) {
@@ -72,7 +72,7 @@ module.exports = {
      * @param {String} identifier
      * @returns {Promise}
      */
-    editProfileEmailNotifications: async (notification, identifier) => {
+    updateEmailNotifications: async (notification, identifier) => {
         return new Promise((resolve, reject) => {
             pool.query('UPDATE user SET email_notifications = ? WHERE identifier = ?', [notification, identifier], (error, result) => {
                 if (error) {
