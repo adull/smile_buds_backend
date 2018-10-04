@@ -44,5 +44,24 @@ module.exports = {
                 resolve(result);
             });
         });
+    },
+
+    /**
+     * Updates a user's password
+     * 
+     * @param {String} password
+     * @param {String} identifier
+     * @returns {Promise}
+     */
+    editProfilePassword: async (password, identifier) => {
+        return new Promise((resolve, reject) => {
+            pool.query('UPDATE user SET password = ? WHERE identifier = ?', [password, identifier], (error, result) => {
+                if (error) {
+                    reject(error);
+                }
+
+                resolve(result);
+            });
+        });
     }
 };
