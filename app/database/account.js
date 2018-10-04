@@ -63,5 +63,24 @@ module.exports = {
                 resolve(result);
             });
         });
+    },
+
+    /**
+     * Updates a user's e-mail notification preference
+     * 
+     * @param {?} notification Is this an int, boolean, string? Need to double check
+     * @param {String} identifier
+     * @returns {Promise}
+     */
+    editProfileEmailNotification: async (notification, identifier) => {
+        return new Promise((resolve, reject) => {
+            pool.query('UPDATE user SET email_notifications = ? WHERE identifier = ?', [notification, identifier], (error, result) => {
+                if (error) {
+                    reject(error);
+                }
+
+                resolve(result);
+            });
+        });
     }
 };
