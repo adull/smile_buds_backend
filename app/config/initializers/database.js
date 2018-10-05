@@ -27,7 +27,6 @@ exports.signup = function(signupData, callback) {
     }
     else {
       connection.query(postSignupSql, signupData, function(err, result) {
-        console.log(postSignupSql);
         connection.release();
         if(err) {
           console.log(err);
@@ -521,35 +520,47 @@ exports.getMessages = function(userid, messaging, callback) {
 }
 
 exports.commentNotifications = function(commentNotificationArr, callback) {
+  let toNotify = 0;
   if(commentNotificationArr.length > 0) {
     var commentNotificationsSql = 'INSERT INTO comment_notifications (notification_type, notification_for, notification_from_id, notification_from_name, post_hash) VALUES';
     for(var i = 0; i < commentNotificationArr.length; i ++) {
       let c = commentNotificationArr[i]
-      if(c.notification_for !== c.notification_from_id) {
-        tempCommentNotifSql = "('comment', " + c.notification_for + ", " + c.notification_from_id + ", '" + c.notification_from_name + "'," + "'" + c.post_hash + "'),"
-        commentNotificationsSql = commentNotificationsSql.concat(tempCommentNotifSql);
-      }
-    }
-    var commentNotificationsSql = commentNotificationsSql.replace(/.$/,";")
-    pool.getConnection(function(err, connection) {
-      if(err) {
-        callback(true);
-        return;
+      if(c.notification_for === c.notification_from_id) {
+
       }
       else {
-        connection.query(commentNotificationsSql, function(err, result) {
-          connection.release();
-          if(err) {
-            console.log(err);
-            callback(true);
-            return;
-          }
-          else {
-            callback(false, "lol");
-          }
-        })
+        tempCommentNotifSql = "('comment', " + c.notification_for + ", " + c.notification_from_id + ", '" + c.notification_from_name + "'," + "'" + c.post_hash + "'),"
+        commentNotificationsSql = commentNotificationsSql.concat(tempCommentNotifSql);
+
+        toNotify++;
       }
-    })
+    }
+    if(toNotify === 0) {
+      callback(false, "lol");
+      return;
+    }
+    else {
+      var commentNotificationsSql = commentNotificationsSql.replace(/.$/,";")
+      pool.getConnection(function(err, connection) {
+        if(err) {
+          callback(true);
+          return;
+        }
+        else {
+          connection.query(commentNotificationsSql, function(err, result) {
+            connection.release();
+            if(err) {
+              console.log(err);
+              callback(true);
+              return;
+            }
+            else {
+              callback(false, "lol");
+            }
+          })
+        }
+      })
+    }
   }
   else {
     callback(true)
