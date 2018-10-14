@@ -1,4 +1,5 @@
 const mysql = require('mysql');
+const DatabaseHelper = require('./helpers');
 
 const pool = mysql.createPool({
     user:      'root',
@@ -15,17 +16,7 @@ module.exports = {
      * @param {Object} data An object containing the user's data
      * @returns {Promise} Promise
      */
-    create: async (data) => {
-        return new Promise((resolve, reject) => {
-            pool.query('INSERT INTO `user` SET ?', data, (error, result) => {
-                if (error) {
-                    reject(error);
-                }
-
-                resolve(result);
-            });
-        });
-    },
+    create: async (data) => DatabaseHelper.promiseResults('INSERT INTO user SET ?', data, pool),
 
     /**
      * Updates a user's hobby
@@ -34,17 +25,7 @@ module.exports = {
      * @param {String} identifier
      * @returns {Promise}
      */
-    updateHobby: async (hobby, identifier) => {
-        return new Promise((resolve, reject) => {
-            pool.query('UPDATE user SET hobby = ? WHERE identifier = ?', [hobby, identifier], (error, result) => {
-                if (error) {
-                    reject(error);
-                }
-
-                resolve(result);
-            });
-        });
-    },
+    updateHobby: async (hobby, id) => DatabaseHelper.promiseResults('UPDATE user SET hobby = ? WHERE identifier = ?', [hobby, id], pool),
 
     /**
      * Updates a user's password
@@ -53,17 +34,7 @@ module.exports = {
      * @param {String} identifier
      * @returns {Promise}
      */
-    updatePassword: async (password, identifier) => {
-        return new Promise((resolve, reject) => {
-            pool.query('UPDATE user SET password = ? WHERE identifier = ?', [password, identifier], (error, result) => {
-                if (error) {
-                    reject(error);
-                }
-
-                resolve(result);
-            });
-        });
-    },
+    updatePassword: async (password, id) => DatabaseHelper.promiseResults('UPDATE user SET password = ? WHERE identifier = ?', [password, id], pool),
 
     /**
      * Updates a user's e-mail notification preference
@@ -72,30 +43,13 @@ module.exports = {
      * @param {String} identifier
      * @returns {Promise}
      */
-    updateEmailNotifications: async (notification, identifier) => {
-        return new Promise((resolve, reject) => {
-            pool.query('UPDATE user SET email_notifications = ? WHERE identifier = ?', [notification, identifier], (error, result) => {
-                if (error) {
-                    reject(error);
-                }
-
-                resolve(result);
-            });
-        });
-    },
+    updateEmailNotifications = async (notification, id) => DatabaseHelper.promiseResults('UPDATE user SET email_notifications = ? WHERE identifier = ?', [notification, id], pool),
 
     /**
      * Checks the database to see if an e-mail exists
      * 
      * @param {String} email
      * @returns {Promise}
-     * @todo Need to test this one line approach and get feedback from Adlai about it
      */
-    emailExists: async (email) => {
-        return new Promise((resolve, reject) => {
-            pool.query('SELECT email FROM user WHERE email = ?', [email],
-                (error, result) => error ? reject(error) : resolve(result)
-            );
-        });
-    }
+    emailExists: async (email) => DatabaseHelper.promiseResults('SELECT email FROM user WHERE email = ?', [email], pool)
 };
