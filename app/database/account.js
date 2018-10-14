@@ -82,5 +82,20 @@ module.exports = {
                 resolve(result);
             });
         });
+    },
+
+    /**
+     * Checks the database to see if an e-mail exists
+     * 
+     * @param {String} email
+     * @returns {Promise}
+     * @todo Need to test this one line approach and get feedback from Adlai about it
+     */
+    emailExists: async (email) => {
+        return new Promise((resolve, reject) => {
+            pool.query('SELECT email FROM user WHERE email = ?', [email],
+                (error, result) => error ? reject(error) : resolve(result)
+            );
+        });
     }
 };
