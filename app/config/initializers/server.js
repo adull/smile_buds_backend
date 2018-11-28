@@ -2,6 +2,8 @@ const express = require('express');
 var compression = require('compression')
 const path = require('path');
 const bodyParser = require('body-parser');
+var device = require('express-device');
+
 
 const port = 9001;
 
@@ -11,8 +13,10 @@ var start = function(cb) {
   const app = express();
 
   app.set('trust proxy', 1);
+  app.use(device.capture());
 
   if(process.env.NODE_ENV === 'development') {
+    console.log("development mode")
     var mysqlOptions = {
       user: 'root',
       password: 'root',
@@ -24,6 +28,7 @@ var start = function(cb) {
     };
   }
   else if(process.env.NODE_ENV === 'production') {
+    console.log("production mode")
     var mysqlOptions = {
       user: 'root',
       password: 'root',
@@ -33,6 +38,9 @@ var start = function(cb) {
       createDatabaseTable: true,
       connectionLimit: 10000
     };
+  }
+  else {
+    console.log("you fucked up")
   }
 
   app.use(compression());
