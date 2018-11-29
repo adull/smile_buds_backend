@@ -1258,3 +1258,93 @@ exports.getCommentGrins = function(commentArr, callback) {
     callback(false, []);
   }
 }
+
+exports.doesFeedExist = function(newFeedName, callback) {
+  var doesFeedExistSql = "SELECT * FROM feeds WHERE feedName='" + newFeedName + "';";
+  pool.getConnection(function(err, connection) {
+    if(err) {
+      callback(true);
+      return;
+    }
+    else {
+      connection.query(doesFeedExistSql, function(err, result) {
+        connection.release();
+        if(err) {
+          console.log(err);
+          callback(true);
+        }
+        else {
+          callback(false, result);
+        }
+      })
+    }
+  })
+}
+
+exports.newFeed = function(newFeedData, callback) {
+  var newFeedSql = "INSERT INTO feeds SET ?";
+  pool.getConnection(function(err, connection) {
+    if(err) {
+      callback(true);
+      return;
+    }
+    else {
+      connection.query(newFeedSql, newFeedData, function(err, result) {
+        connection.release();
+        if(err) {
+          console.log(err);
+          callback(true);
+        }
+        else {
+          callback(false, result);
+        }
+      })
+    }
+  })
+}
+
+exports.getUserFeeds = function(callback) {
+  var getUserFeedsSql = "SELECT * FROM feeds";
+  pool.getConnection(function(err, connection) {
+    if(err) {
+      callback(true);
+      return;
+    }
+    else {
+      connection.query(getUserFeedsSql, function(err, result) {
+        connection.release();
+        if(err) {
+          console.log(err);
+          callback(true);
+        }
+        else {
+          callback(false, result);
+        }
+      })
+    }
+  })
+}
+
+exports.getUserFeedPosts = function(feedName, postsReceived, callback) {
+  var getuserFeedPostsSql = "SELECT * FROM post WHERE feed_name='" + feedName + "'";
+  pool.getConnection(function(err, connection) {
+    if(err) {
+      callback(true);
+      return;
+    }
+    else {
+      connection.query(getuserFeedPostsSql, function(err, result) {
+        connection.release();
+        if(err) {
+          callback(true);
+          return;
+        }
+        else {
+          // console.log(result);
+          callback(false, result);
+          return;
+        }
+      })
+    }
+  });
+}

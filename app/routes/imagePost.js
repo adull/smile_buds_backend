@@ -26,7 +26,7 @@ function makeHash() {
 }
 
 module.exports = function(router) {
-  router.route('/')
+  router.route('/:feedName')
   .post(function(req, res, next) {
     upload(req,res,function(err){
       //copied from https://stackoverflow.com/questions/5129624/convert-js-date-time-to-mysql-datetime
@@ -43,8 +43,10 @@ module.exports = function(router) {
       let currentTime = new Date().toMysqlFormat();
       let hashIsUnique = false;
       let randomHash = '';
-        randomHash = makeHash();
+          randomHash = makeHash();
+      let feedName = req.params.feedName;
       let post = {
+        feed_name: feedName,
         hash: randomHash,
         time: currentTime,
         subject: req.body.subject,

@@ -15,7 +15,33 @@ var upload = multer({ storage : storage});
 module.exports = function(router) {
   router.route('/')
   .post(function(req, res) {
-    console.log(req.body);
-    res.end();
+    // console.log(req.body);
+    var newFeedData = req.body
+    db.doesFeedExist(newFeedData.feedName, function(err, results) {
+      if(err) {
+        res.status(500).send("Server error");
+      }
+      else {
+        if(results.length > 0) {
+          res.json({
+            success: false,
+            reason: 'name-exists'
+          })
+        }
+        else {
+          db.newFeed(newFeedData, function(err, results) {
+            if(err) {
+              res.status(500).send("Server error");
+            }
+            else {
+              res.json({
+                success: true
+              })
+            }
+          })
+        }
+      }
+    })
+
   })
 }
