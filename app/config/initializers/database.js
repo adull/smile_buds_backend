@@ -1260,7 +1260,8 @@ exports.getCommentGrins = function(commentArr, callback) {
 }
 
 exports.doesFeedExist = function(newFeedName, callback) {
-  var doesFeedExistSql = "SELECT * FROM feeds WHERE feedName='" + newFeedName + "';";
+  console.log(newFeedName);
+  var doesFeedExistSql = "SELECT * FROM feeds WHERE feed_name='" + newFeedName + "';";
   pool.getConnection(function(err, connection) {
     if(err) {
       callback(true);
@@ -1341,6 +1342,29 @@ exports.getUserFeedPosts = function(feedName, postsReceived, callback) {
         }
         else {
           // console.log(result);
+          callback(false, result);
+          return;
+        }
+      })
+    }
+  });
+}
+
+exports.getUserFeed = function(feedName, callback) {
+  var getUserFeedSql = "SELECT * FROM feeds WHERE feed_name='" + feedName + "'";
+  pool.getConnection(function(err, connection) {
+    if(err) {
+      callback(true);
+      return;
+    }
+    else {
+      connection.query(getUserFeedSql, function(err, result) {
+        connection.release();
+        if(err) {
+          callback(true);
+          return;
+        }
+        else {
           callback(false, result);
           return;
         }

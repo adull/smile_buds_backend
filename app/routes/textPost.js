@@ -29,7 +29,6 @@ module.exports = function(router) {
     let randomHash = '';
         randomHash = makeHash();
     let feedName = req.params.feedName;
-    console.log(feedName);
     let post = {
       feed_name: feedName,
       hash: randomHash,
@@ -45,6 +44,7 @@ module.exports = function(router) {
         res.status(500).send("Server error");
       }
       else {
+        console.log("should be succesful??");
         res.json({
           success: true,
           hash: post.hash

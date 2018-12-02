@@ -22,11 +22,10 @@ module.exports = function(router) {
               }
               else {
                 if(result[0]) {
-                  // console.log("yea");
-                  // console.log(result[0]);
                   if(result[0].type === "admin") {
                     isAdmin = true;
                   }
+
                 }
               }
               for(var i = 0; i < getPostsResults.length; i ++) {
