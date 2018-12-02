@@ -29,6 +29,7 @@ module.exports = function(router) {
     let randomHash = '';
         randomHash = makeHash();
     let feedName = req.params.feedName;
+    console.log(feedName);
     let post = {
       feed_name: feedName,
       hash: randomHash,

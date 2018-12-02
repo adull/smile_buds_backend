@@ -1326,14 +1326,14 @@ exports.getUserFeeds = function(callback) {
 }
 
 exports.getUserFeedPosts = function(feedName, postsReceived, callback) {
-  var getuserFeedPostsSql = "SELECT * FROM post WHERE feed_name='" + feedName + "'";
+  var getUserFeedPostsSql = "SELECT * FROM post WHERE feed_name='" + feedName + "' ORDER BY id DESC LIMIT " + postsReceived + ", 10";
   pool.getConnection(function(err, connection) {
     if(err) {
       callback(true);
       return;
     }
     else {
-      connection.query(getuserFeedPostsSql, function(err, result) {
+      connection.query(getUserFeedPostsSql, function(err, result) {
         connection.release();
         if(err) {
           callback(true);
