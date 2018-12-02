@@ -15,9 +15,12 @@ var upload = multer({ storage : storage});
 module.exports = function(router) {
   router.route('/')
   .post(function(req, res) {
+    console.log(req.session)
     var identifier = req.session.identifier;
+    var adminName = req.session.user;
     var newFeedData = req.body;
     newFeedData.admin = identifier;
+    newFeedData.admin_name = adminName;
     db.doesFeedExist(newFeedData.feed_name, function(err, results) {
       if(err) {
         res.status(500).send("Server error");

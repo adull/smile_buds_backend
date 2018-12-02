@@ -1,0 +1,19 @@
+var db = require('../config/initializers/database');
+
+module.exports = function(router) {
+  router.route('/:feedName')
+  .post(function(req, res) {
+    var feedName = req.params.feedName;
+    var userFeedUpdateBody = req.body;
+    db.editUserFeed(userFeedUpdateBody, feedName, function(err, results) {
+      if(err) {
+        res.status(500).send("Server error :~(");
+        return;
+      }
+      else {
+        res.json({success: true});
+        return;
+      }
+    })
+  })
+}

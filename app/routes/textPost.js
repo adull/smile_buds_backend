@@ -44,7 +44,6 @@ module.exports = function(router) {
         res.status(500).send("Server error");
       }
       else {
-        console.log("should be succesful??");
         res.json({
           success: true,
           hash: post.hash

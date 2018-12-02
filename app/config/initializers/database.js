@@ -1372,3 +1372,29 @@ exports.getUserFeed = function(feedName, callback) {
     }
   });
 }
+
+exports.editUserFeed = function(updateBody, feedName, callback) {
+  var updatedDescription = updateBody.description;
+  console.log(updatedDescription);
+  var editUserFeedSql = "UPDATE feeds SET description='" + updatedDescription +"' WHERE feed_name='" + feedName + "'";
+  pool.getConnection(function(err, connection) {
+    if(err) {
+      console.log(err);
+      callback(true);
+      return;
+    }
+    else {
+      connection.query(editUserFeedSql, function(err, result) {
+        connection.release();
+        if(err) {
+          console.log(err);
+          callback(true);
+          return;
+        }
+        else {
+          callback(false, result);
+        }
+      })
+    }
+  })
+}
