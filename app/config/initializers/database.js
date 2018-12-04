@@ -1260,7 +1260,6 @@ exports.getCommentGrins = function(commentArr, callback) {
 }
 
 exports.doesFeedExist = function(newFeedName, callback) {
-  console.log(newFeedName);
   var doesFeedExistSql = "SELECT * FROM feeds WHERE feed_name='" + newFeedName + "';";
   pool.getConnection(function(err, connection) {
     if(err) {

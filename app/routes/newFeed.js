@@ -15,7 +15,6 @@ var upload = multer({ storage : storage});
 module.exports = function(router) {
   router.route('/')
   .post(function(req, res) {
-    console.log(req.session)
     var identifier = req.session.identifier;
     var adminName = req.session.user;
     var newFeedData = req.body;
