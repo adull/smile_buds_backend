@@ -1373,10 +1373,24 @@ exports.getUserFeed = function(feedName, callback) {
   });
 }
 
-exports.editUserFeed = function(updateBody, feedName, callback) {
-  var updatedDescription = updateBody.description;
-  console.log(updatedDescription);
-  var editUserFeedSql = "UPDATE feeds SET description='" + updatedDescription +"' WHERE feed_name='" + feedName + "'";
+exports.editUserFeed = function(updateBody, feedProperty, feedName, callback) {
+  // var updatedDescription = updateBody.description;
+  var updatedValue;
+  if(feedProperty === 'name') {
+    updatedValue = updateBody.name;
+  }
+  else if(feedProperty === 'description') {
+    updatedValue = updateBody.description;
+  }
+  else if(feedProperty === 'image') {
+    updatedValue = updateBody.image;
+  }
+  else {
+    console.log("invalid feedProperty - line 1389. Current input for feedProperty is " + feedProperty);
+    res.end();
+    return;
+  }
+  var editUserFeedSql = "UPDATE feeds SET " + feedProperty + "='" + updatedValue +"' WHERE feed_name='" + feedName + "'";
   pool.getConnection(function(err, connection) {
     if(err) {
       console.log(err);
