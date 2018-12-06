@@ -11,7 +11,7 @@ if(process.env.NODE_ENV === 'development') {
 else if(process.env.NODE_ENV === 'production') {
   var pool = mysql.createPool({
     user: 'root',
-    password: '',
+    password: 'root',
     host: 'localhost',
     port: '3306',
     database: 'smile_buds'
