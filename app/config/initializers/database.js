@@ -1,4 +1,7 @@
 const mysql = require('mysql');
+
+// console.log(process.env.NODE_ENV);
+console.log(process.env);
 if(process.env.NODE_ENV === 'development') {
   var pool = mysql.createPool({
     user: 'root',
@@ -17,9 +20,6 @@ else if(process.env.NODE_ENV === 'production') {
     database: 'smile_buds'
   });
 }
-
-console.log("pool");
-console.log(pool);
 
 //take signup form, put into db
 exports.signup = function(signupData, callback) {
