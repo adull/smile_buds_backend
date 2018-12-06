@@ -1,7 +1,6 @@
 const mysql = require('mysql');
 
 // console.log(process.env.NODE_ENV);
-console.log(process.env);
 if(process.env.NODE_ENV === 'development') {
   var pool = mysql.createPool({
     user: 'root',
