@@ -11,12 +11,15 @@ if(process.env.NODE_ENV === 'development') {
 else if(process.env.NODE_ENV === 'production') {
   var pool = mysql.createPool({
     user: 'root',
-    password: 'root',
+    password: '',
     host: 'localhost',
     port: '3306',
     database: 'smile_buds'
   });
 }
+
+console.log("pool");
+console.log(pool);
 
 //take signup form, put into db
 exports.signup = function(signupData, callback) {
