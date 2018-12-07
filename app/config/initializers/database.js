@@ -20,6 +20,9 @@ else if(process.env.NODE_ENV === 'production') {
   });
 }
 
+console.log("pool:")
+console.log(pool);
+
 //take signup form, put into db
 exports.signup = function(signupData, callback) {
   var postSignupSql = "INSERT INTO user SET ?";
