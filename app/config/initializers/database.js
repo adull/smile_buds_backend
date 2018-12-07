@@ -2,6 +2,7 @@ const mysql = require('mysql');
 
 // console.log(process.env.NODE_ENV);
 if(process.env.NODE_ENV === 'development') {
+  console.log("node env is development")
   var pool = mysql.createPool({
     user: 'root',
     password: 'root',
@@ -11,6 +12,7 @@ if(process.env.NODE_ENV === 'development') {
   });
 }
 else if(process.env.NODE_ENV === 'production') {
+  console.log("node env is production")
   var pool = mysql.createPool({
     user: 'root',
     password: 'root',
@@ -18,6 +20,9 @@ else if(process.env.NODE_ENV === 'production') {
     port: '3306',
     database: 'smile_buds'
   });
+}
+else {
+  console.log("node env is else")
 }
 
 console.log("pool:")
