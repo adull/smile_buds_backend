@@ -16,7 +16,6 @@ var start = function(cb) {
   app.use(device.capture());
 
   if(process.env.NODE_ENV === 'development') {
-    console.log("development mode")
     var mysqlOptions = {
       user: 'root',
       password: 'root',
@@ -28,7 +27,6 @@ var start = function(cb) {
     };
   }
   else if(process.env.NODE_ENV === 'production') {
-    console.log("production mode")
     var mysqlOptions = {
       user: 'root',
       password: 'root',

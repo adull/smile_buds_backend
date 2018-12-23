@@ -25,9 +25,6 @@ else {
   console.log("node env is else")
 }
 
-console.log("pool:")
-console.log(pool);
-
 //take signup form, put into db
 exports.signup = function(signupData, callback) {
   var postSignupSql = "INSERT INTO user SET ?";
